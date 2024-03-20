@@ -15,17 +15,10 @@
     <Folder Include="Abstractions\IUnitOfWork\" />
     <Folder Include="Abstractions\Services\" />
     <Folder Include="AutoMappers\" />
-    <Folder Include="DTOs\AuthorDTOs\" />
-    <Folder Include="DTOs\BookDTOs\" />
-    <Folder Include="DTOs\GenreDTOs\" />
-    <Folder Include="DTOs\BasketDTOs\" />
     <Folder Include="DTOs\TokenDTOs\" />
     <Folder Include="DTOs\UserDTOs\" />
-    <Folder Include="DTOs\ReviewDTOs\" />
-    <Folder Include="DTOs\OrderDTOs\" />
     <Folder Include="Enums\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Models\ResponseModels\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
