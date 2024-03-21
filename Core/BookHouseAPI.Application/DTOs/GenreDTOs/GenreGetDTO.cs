@@ -8,5 +8,7 @@ namespace BookHouseAPI.Application.DTOs.GenreDTOs
 {
     public class GenreGetDTO
     {
+        public string Name { get; set; }
+        public string GenreDescription { get; set; }
     }
 }

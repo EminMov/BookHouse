@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\GlobalExceptions\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\BookHouseAPI.Infrastructure\BookHouseAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\BookHouseAPI.Persistance\BookHouseAPI.Persistance.csproj" />
   </ItemGroup>

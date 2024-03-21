@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookHouseAPI.Application.DTOs.GenreDTOs
+namespace BookHouseAPI.Application.Abstractions.Services
 {
-    public class GenreUpdateDTO
+    public interface IUserService
     {
-        public string GenreDescription { get; set; }
+
     }
 }
