@@ -65,10 +65,6 @@ namespace BookHouseAPI.Persistance.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RipDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Biography = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BooksCount = table.Column<int>(type: "int", nullable: false)
                 },
@@ -217,7 +213,6 @@ namespace BookHouseAPI.Persistance.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -284,11 +279,18 @@ namespace BookHouseAPI.Persistance.Migrations
                     Grade = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookID = table.Column<int>(type: "int", nullable: false)
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookID = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reviews_Books_BookID",
                         column: x => x.BookID,
@@ -303,15 +305,21 @@ namespace BookHouseAPI.Persistance.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemPrice = table.Column<double>(type: "float", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    TotalItems = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
                     ModifyTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BasketStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Baskets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Baskets_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Baskets_Orders_OrderID",
                         column: x => x.OrderID,
@@ -325,11 +333,11 @@ namespace BookHouseAPI.Persistance.Migrations
                 columns: table => new
                 {
                     BasketsId = table.Column<int>(type: "int", nullable: false),
-                    ItemId = table.Column<int>(type: "int", nullable: false)
+                    ItemsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BasketBook", x => new { x.BasketsId, x.ItemId });
+                    table.PrimaryKey("PK_BasketBook", x => new { x.BasketsId, x.ItemsId });
                     table.ForeignKey(
                         name: "FK_BasketBook_Baskets_BasketsId",
                         column: x => x.BasketsId,
@@ -337,8 +345,8 @@ namespace BookHouseAPI.Persistance.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BasketBook_Books_ItemId",
-                        column: x => x.ItemId,
+                        name: "FK_BasketBook_Books_ItemsId",
+                        column: x => x.ItemsId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -389,14 +397,19 @@ namespace BookHouseAPI.Persistance.Migrations
                 column: "BooksId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasketBook_ItemId",
+                name: "IX_BasketBook_ItemsId",
                 table: "BasketBook",
-                column: "ItemId");
+                column: "ItemsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Baskets_OrderID",
                 table: "Baskets",
                 column: "OrderID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Baskets_UserId",
+                table: "Baskets",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_AppUserId",
@@ -417,6 +430,11 @@ namespace BookHouseAPI.Persistance.Migrations
                 name: "IX_Reviews_BookID",
                 table: "Reviews",
                 column: "BookID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserId",
+                table: "Reviews",
+                column: "UserId");
         }
 
         /// <inheritdoc />

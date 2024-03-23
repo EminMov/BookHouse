@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookHouseAPI.Application.DTOs.UserDTOs
 {
-    internal class UserUpdateDTO
+    public class UserUpdateDTO
     {
     }
 }

@@ -55,8 +55,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             ResponseModel<bool> response = new ResponseModel<bool>();
             var data = await _unitOfWork.GetRepository<Genre>().GetByIdAsync(Id);
             var result = _unitOfWork.GetRepository<Genre>().Remove(data);
-            var rawAffected = await _unitOfWork.SaveChangesAsync();
-            if (rawAffected > 0)
+            var rowAffected = await _unitOfWork.SaveChangesAsync();
+            if (rowAffected > 0)
             {
                 response.Success = true;
                 response.StatusCode = 200;

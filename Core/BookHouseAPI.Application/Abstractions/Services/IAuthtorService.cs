@@ -10,10 +10,10 @@ namespace BookHouseAPI.Application.Abstractions.Services
 {
     public interface IAuthtorService
     {
-        public Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthors();
-        public Task<ResponseModel<AuthorGetDTO>> AuthorGetByID(int Id);
-        public Task<ResponseModel<AuthorAddDTO>> AuthorAdd(AuthorAddDTO authorAdd);
-        public Task<ResponseModel<bool>> AuthorUpdate(AuthorUpdateDTO authorUpdate, int Id);
-        public Task<ResponseModel<bool>> AuthorDelete(int Id);
+        public Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthorsAsync();
+        public Task<ResponseModel<AuthorGetDTO>> AuthorGetByIDAsync(int Id);
+        public Task<ResponseModel<AuthorAddDTO>> AuthorAddAsync(AuthorAddDTO authorAdd);
+        public Task<ResponseModel<bool>> AuthorUpdateAsync(AuthorUpdateDTO authorUpdate, int Id);
+        public Task<ResponseModel<bool>> AuthorDeleteAsync(int Id);
     }
 }

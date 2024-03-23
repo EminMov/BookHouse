@@ -8,11 +8,12 @@ namespace BookHouseAPI.Domain.Entities
 {
     public class Basket : BaseEntity
     {
-        public ICollection<Book> Item { get; set; }
-        public double ItemPrice { get; set; }
+        public AppUser User { get; set; }
+        public ICollection<Book> Items { get; set; }
+        public int BookId { get; set; }
+        public int TotalItems { get; set; }
         public double TotalPrice { get; set; }
         public DateTime ModifyTime { get; set; }
-        public string BasketStatus { get; set; }
         public Order Order { get; set; }
         public int OrderID { get; set; }
     }
