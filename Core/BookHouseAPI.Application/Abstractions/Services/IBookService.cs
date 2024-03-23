@@ -14,7 +14,7 @@ namespace BookHouseAPI.Application.Abstractions.Services
         public Task<ResponseModel<BookAddDTO>> BookAdd(BookAddDTO bookAdd);
         public Task<ResponseModel<List<BookGetDTO>>> GetAllBooks();
         public Task<ResponseModel<BookGetDTO>> BookGetByID(int Id);
-        public Task<ResponseModel<bool>> BookUpdate(BookUpdateDTO BookUpdate, int Id);
+        public Task<ResponseModel<bool>> BookUpdate(BookUpdateDTO bookUpdate, int Id);
         public Task<ResponseModel<bool>> BookDelete(int Id);
     }
 }

@@ -21,7 +21,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<ResponseModel<bool>> AuthorDelete(int Id)
+        public async Task<ResponseModel<bool>> AuthorDeleteAsync(int Id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             var data = await _unitOfWork.GetRepository<Author>().GetByIdAsync(Id);
@@ -44,7 +44,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<AuthorGetDTO>> AuthorGetByID(int Id)
+        public async Task<ResponseModel<AuthorGetDTO>> AuthorGetByIDAsync(int Id)
         {
             ResponseModel<AuthorGetDTO> response = new ResponseModel<AuthorGetDTO>();
             var data = await _unitOfWork.GetRepository<Author>().GetByIdAsync(Id);
@@ -66,7 +66,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<AuthorAddDTO>> AuthorAdd(AuthorAddDTO authorAdd)
+        public async Task<ResponseModel<AuthorAddDTO>> AuthorAddAsync(AuthorAddDTO authorAdd)
         {
             ResponseModel<AuthorAddDTO> response = new ResponseModel<AuthorAddDTO>();
             Author author = new Author();
@@ -74,7 +74,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             author.Name = authorAdd.Name;
             author.FirstName = authorAdd.FirstName;
             author.LastName = authorAdd.LastName;
-            author.Gender = authorAdd.Gender;
             author.Country = authorAdd.Country;
 
             var data = _unitOfWork.GetRepository<Author>().AddAsync(author);
@@ -97,7 +96,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<bool>> AuthorUpdate(AuthorUpdateDTO authorUpdate, int Id)
+        public async Task<ResponseModel<bool>> AuthorUpdateAsync(AuthorUpdateDTO authorUpdate, int Id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             var data = await _unitOfWork.GetRepository<Author>().GetByIdAsync(Id);
@@ -136,7 +135,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthors()
+        public async Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthorsAsync()
         {
             ResponseModel<List<AuthorGetDTO>> response = new ResponseModel<List<AuthorGetDTO>>();
             var data = _unitOfWork.GetRepository<Author>().GetAll();

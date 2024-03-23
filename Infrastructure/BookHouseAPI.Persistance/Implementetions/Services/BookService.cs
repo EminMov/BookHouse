@@ -103,9 +103,42 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public Task<ResponseModel<bool>> BookUpdate(BookUpdateDTO BookUpdate, int Id)
+        public async Task<ResponseModel<bool>> BookUpdate(BookUpdateDTO bookUpdate, int Id)
         {
-            throw new NotImplementedException();
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            var data = await _unitOfWork.GetRepository<Book>().GetByIdAsync(Id);
+
+            if (data != null)
+            {
+                data.Price = bookUpdate.Price;
+                data.Authors = bookUpdate.Authors;
+
+                await _unitOfWork.GetRepository<Book>().AddAsync(data);
+                var rawAffected = await _unitOfWork.SaveChangesAsync();
+                if (rawAffected > 0)
+                {
+                    response.Success = true;
+                    response.StatusCode = 200;
+                    response.Data = true;
+                    response.Message = "Book info successfully updated";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.StatusCode = 400;
+                    response.Data = false;
+                    response.Message = "There are ana error in Save Changes";
+                }
+            }
+            else
+            {
+                response.Success = false;
+                response.StatusCode = 401;
+                response.Data = false;
+                response.Message = "Using this ID, the book was not found";
+            }
+
+            return response;
         }
 
         public async Task<ResponseModel<List<BookGetDTO>>> GetAllBooks()
