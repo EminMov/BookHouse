@@ -127,7 +127,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             else
             {
                 response.Success = false;
-                response.StatusCode = 401;
+                response.StatusCode = 404;
                 response.Data = false;
                 response.Message = "Using this ID, the author was not found";
             }

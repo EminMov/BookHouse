@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookHouseAPI.Application.DTOs.BasketDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace BookHouseAPI.Application.DTOs.OrderDTOs
 {
     public class OrderGetDTO
     {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public DateTime Created { get; set; }
+        public double TotalPrice { get; set; }
+        public List<BasketGetDTO> Basket { get; set; }
     }
 }
