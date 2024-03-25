@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -79,7 +80,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
                 if (userBasket == null)
                 {
-                    // Если корзина не найдена, возвращаем сообщение об ошибке
                     response.Success = false;
                     response.StatusCode = 404; // Not Found
                     response.Message = "Basket not found for the user";
@@ -98,7 +98,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     OrderID = userBasket.OrderID
                 };
 
-                // Устанавливаем успешный результат и возвращаем BasketDTO
                 response.Success = true;
                 response.StatusCode = 200; // OK
                 response.Data = basketDTO;
@@ -108,7 +107,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                // Если произошла ошибка, возвращаем сообщение об ошибке
                 response.Success = false;
                 response.StatusCode = 500; // Internal Server Error
                 response.Message = $"An error occurred while retrieving the basket: {ex.Message}";
@@ -116,14 +114,95 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public Task<ResponseModel<bool>> RemoveFromBasketAsync(int userId, int basketId)
+        public async Task<ResponseModel<bool>> RemoveFromBasketAsync(string userId, int bookId)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<bool>();
+
+            try
+            {
+                var userBasket = await _unitOfWork.GetRepository<Basket>()
+                                                  .GetAll()
+                                                  .Include(b => b.Items)
+                                                  .FirstOrDefaultAsync(b => b.User.Id == userId);
+
+                if (userBasket == null)
+                {
+                    response.Success = false;
+                    response.StatusCode = 404; // Not Found
+                    response.Message = "Basket not found for the user";
+                    return response;
+                }
+
+                var bookToRemove = userBasket.Items.FirstOrDefault(item => item.Id == bookId);
+
+                if (bookToRemove == null)
+                {
+                    response.Success = false;
+                    response.StatusCode = 404; // Not Found
+                    response.Message = "Book not found in the basket";
+                    return response;
+                }
+
+                userBasket.Items.Remove(bookToRemove);
+                userBasket.TotalItems -= 1; 
+                userBasket.TotalPrice -= bookToRemove.Price;
+
+                await _unitOfWork.SaveChangesAsync();
+
+                response.Success = true;
+                response.StatusCode = 200; // OK
+                response.Data = true;
+                response.Message = "Book removed from the basket successfully";
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.StatusCode = 500; // Internal Server Error
+                response.Message = $"An error occurred while removing the book from the basket: {ex.Message}";
+                return response;
+            }
         }
 
-        public Task<ResponseModel<bool>> UpdateBasketAsync(BasketUpdateDTO basketUpdate, int Id)
+        public async Task<ResponseModel<bool>> UpdateBasketAsync(BasketUpdateDTO basketUpdate, int Id)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<bool>();
+
+            try
+            {
+                var userBasket = await _unitOfWork.GetRepository<Basket>()
+                                                  .GetAll()
+                                                  .Include(b => b.Items)
+                                                  .FirstOrDefaultAsync(b => b.User.Id == basketUpdate.UserId);
+
+                if (userBasket == null)
+                {
+                    response.Success = false;
+                    response.StatusCode = 404;
+                    response.Message = "Basket not found for the user";
+                    return response;
+                }
+
+                userBasket.TotalItems = basketUpdate.TotalItems;
+                userBasket.TotalPrice = basketUpdate.TotalPrice;
+                userBasket.ModifyTime = DateTime.Now;
+                await _unitOfWork.SaveChangesAsync();
+
+                response.Success = true;
+                response.StatusCode = 200; 
+                response.Data = true;
+                response.Message = "Basket updated successfully";
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.StatusCode = 500; 
+                response.Message = $"An error occurred while updating the basket: {ex.Message}";
+                return response;
+            }
         }
     }
 }

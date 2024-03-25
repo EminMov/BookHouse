@@ -8,5 +8,8 @@ namespace BookHouseAPI.Application.DTOs.BasketDTOs
 {
     public class BasketUpdateDTO
     {
+        public string UserId { get; set; } 
+        public int TotalItems { get; set; } 
+        public double TotalPrice { get; set; } 
     }
 }

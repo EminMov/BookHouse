@@ -11,6 +11,6 @@ namespace BookHouseAPI.Domain.Entities
         public AppUser User { get; set; }
         public DateTime Created { get; set; }
         public double TotalPrice { get; set; }
-        public ICollection<Basket> Basket { get; set; }
+        public Basket Basket { get; set; }
     }
 }
