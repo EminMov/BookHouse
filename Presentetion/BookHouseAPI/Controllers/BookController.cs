@@ -10,16 +10,16 @@ namespace BookHouseAPI.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBookService _authorService;
-        public BookController(IBookService authorService)
+        private readonly IBookService _bookService;
+        public BookController(IBookService bookService)
         {
-            _authorService = authorService;
+            _bookService = bookService;
         }
 
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllBooks()
         {
-            var result = await _authorService.GetAllBooks();
+            var result = await _bookService.GetAllBooks();
             //return Ok(result);
             return StatusCode(result.StatusCode, result);
         }
@@ -27,28 +27,28 @@ namespace BookHouseAPI.Controllers
         [HttpGet("get-by-id/{id}")]
         public async Task<IActionResult> GetBookById(int id)
         {
-            var result = await _authorService.BookGetByID(id);
+            var result = await _bookService.BookGetByID(id);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> AddBook([FromBody] BookAddDTO bookAddDTO)
         {
-            var result = await _authorService.BookAdd(bookAddDTO);
+            var result = await _bookService.BookAdd(bookAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateBook([FromBody] BookUpdateDTO bookUpdateDTO, int id)
         {
-            var result = await _authorService.BookUpdate(bookUpdateDTO, id);
+            var result = await _bookService.BookUpdate(bookUpdateDTO, id);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            var result = await _authorService.BookDelete(id);
+            var result = await _bookService.BookDelete(id);
             return StatusCode(result.StatusCode, result);
         }
     }

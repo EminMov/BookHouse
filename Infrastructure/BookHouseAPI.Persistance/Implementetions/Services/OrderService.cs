@@ -2,7 +2,7 @@
 using BookHouseAPI.Application.Abstractions.IUnitOfWork;
 using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.OrderDTOs;
-using BookHouseAPI.Application.DTOs.ReturnedBookDTOs;
+using BookHouseAPI.Application.DTOs.ReturnBookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -96,7 +96,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     UserId = order.User.Id,
                     TotalPrice = order.TotalPrice,
                     Created = order.Created
-                    // тут есть проблема, не могу передать детали заказа, так как 
+                    // тут есть проблема, не могу передать детали заказа, такие как количество книг, какие именно книги  
 
                 }).ToList();
 
@@ -116,9 +116,55 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public Task<ResponseModel<ReturnedBookDTO>> ReturnBookAsync(string userId)
+        public async Task<ResponseModel<ReturnedBookDTO>> ReturnBookAsync(ReturnBookDTO returnBookDTO)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<ReturnedBookDTO>();
+
+            try
+            {
+                var order = await _unitOfWork.GetRepository<Order>().GetByIdAsync(returnBookDTO.OrderId);
+
+                if (order == null || order.User.Id != returnBookDTO.UserId)
+                {
+                    response.Success = false;
+                    response.StatusCode = 404;
+                    response.Message = "Order not found or does not belong to the user";
+                    return response;
+                }
+
+                var bookToRemove = order.Basket.Items.FirstOrDefault(b => b.Id == returnBookDTO.BookId);
+
+                if (bookToRemove == null)
+                {
+                    response.Success = false;
+                    response.StatusCode = 404;
+                    response.Message = "Book not found in the order";
+                    return response;
+                }
+
+                order.Basket.Items.Remove(bookToRemove);
+                await _unitOfWork.SaveChangesAsync();
+
+                var returnedBookDTO = new ReturnedBookDTO
+                {
+                    BookId = bookToRemove.Id,
+                    Title = bookToRemove.Title
+                };
+
+                response.Success = true;
+                response.StatusCode = 200;
+                response.Data = returnedBookDTO;
+                response.Message = "Book returned successfully";
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.StatusCode = 500;
+                response.Message = $"An error occurred while returning the book: {ex.Message}";
+                return response;
+            }
         }
     }
 }

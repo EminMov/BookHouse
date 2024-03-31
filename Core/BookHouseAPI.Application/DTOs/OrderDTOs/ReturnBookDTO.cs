@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookHouseAPI.Application.DTOs.OrderDTOs
+namespace BookHouseAPI.Application.DTOs.ReturnBookDTOs
 {
-    public class ReturnedBookDTO
+    public class ReturnBookDTO
     {
         public int BookId { get; set; }
-        public string Title { get; set; }
+        public string UserId { get; set; }
+        public int OrderId { get; set; }
     }
 }
