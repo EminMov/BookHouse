@@ -1,12 +1,6 @@
 ﻿using BookHouseAPI.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using static BookHouseAPI.Domain.Entities.AppUser;
 
 namespace BookHouseAPI.Persistance.Contexts
@@ -27,6 +21,16 @@ namespace BookHouseAPI.Persistance.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Book>()
+                .HasMany(x => x.BookAuthors)
+                .WithOne(x => x.Book)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Author>()
+                .HasMany(x => x.BookAuthors)
+                .WithOne(x => x.Author)
+                .OnDelete(DeleteBehavior.SetNull);
+
             base.OnModelCreating(builder);
         }
 

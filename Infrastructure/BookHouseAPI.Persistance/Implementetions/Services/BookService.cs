@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using BookHouseAPI.Application.Abstractions.IUnitOfWork;
 using BookHouseAPI.Application.Abstractions.Services;
-using BookHouseAPI.Application.DTOs.AuthorDTOs;
 using BookHouseAPI.Application.DTOs.BookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
@@ -27,7 +21,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             ResponseModel<BookAddDTO> response = new ResponseModel<BookAddDTO>();
             Book book = new Book();
 
-            book.Authors = bookAdd.Authors;
             book.ISBN = bookAdd.ISBN;
             book.NumberOfPages = bookAdd.NumberOfPages;
             book.Description = bookAdd.Description;
@@ -111,7 +104,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             if (data != null)
             {
                 data.Price = bookUpdate.Price;
-                data.Authors = bookUpdate.Authors;
 
                 await _unitOfWork.GetRepository<Book>().AddAsync(data);
                 var rawAffected = await _unitOfWork.SaveChangesAsync();

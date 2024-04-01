@@ -4,11 +4,7 @@ using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.AuthorDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
@@ -98,63 +94,74 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
         public async Task<ResponseModel<bool>> AuthorUpdateAsync(AuthorUpdateDTO authorUpdate, int Id)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
             var data = await _unitOfWork.GetRepository<Author>().GetByIdAsync(Id);
 
-            if (data != null)
+            if (data is not null)
             {
                 data.Name = authorUpdate.Name;
                 data.FirstName = authorUpdate.FirstName;
                 data.LastName = authorUpdate.LastName;
+                data.Country = authorUpdate.Country;
 
-                await _unitOfWork.GetRepository<Author>().AddAsync(data);
-                var rawAffected = await _unitOfWork.SaveChangesAsync();
-                if (rawAffected > 0)
+                try
                 {
-                    response.Success = true;
-                    response.StatusCode = 200;
-                    response.Data = true;
-                    response.Message = "Author info successfully updated";
+                    _unitOfWork.GetRepository<Author>().Update(data);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    return new ResponseModel<bool>
+                    {
+                        Success = true,
+                        StatusCode = 200,
+                        Data = true,
+                        Message = "Author info successfully updated"
+                    };
                 }
-                else
+                catch
                 {
-                    response.Success = false;
-                    response.StatusCode = 400;
-                    response.Data = false;
-                    response.Message = "There are ana error in Save Changes";
+                    return new ResponseModel<bool>
+                    {
+                        StatusCode = 500,
+                        Data = false,
+                        Message = "Internal Server Errror"
+                    };
                 }
             }
-            else
+
+            return new ResponseModel<bool>
             {
-                response.Success = false;
-                response.StatusCode = 404;
-                response.Data = false;
-                response.Message = "Using this ID, the author was not found";
-            }
-
-            return response;
+                StatusCode = 400,
+                Data = false,
+                Message = "User not found"
+            };
         }
 
         public async Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthorsAsync()
         {
-            ResponseModel<List<AuthorGetDTO>> response = new ResponseModel<List<AuthorGetDTO>>();
-            var data = _unitOfWork.GetRepository<Author>().GetAll();
-            if (data != null )
+            var data = _unitOfWork.GetRepository<Author>()
+                .GetAll()
+                .Include(x => x.BookAuthors)
+                .ThenInclude(x => x.Book);
+
+            if (data is not null )
             {
                 var get = _mapper.Map<List<AuthorGetDTO>>(data);
-                response.Data = get;
-                response.Success = true;
-                response.StatusCode = 200;
-                response.Message = "All authors";
+
+                return new ResponseModel<List<AuthorGetDTO>>
+                {
+                    Data = get,
+                    Success = true,
+                    StatusCode=200,
+                    Message = "All authors"
+                };
             }
             else
             {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.Data = null;
-                response.Message = "There are an error with Get All Author";
+                return new ResponseModel<List<AuthorGetDTO>>
+                {
+                    StatusCode = 400,
+                    Message = "There are an error with Get All Author"
+                };
             }
-            return response;
         }
     }
 }

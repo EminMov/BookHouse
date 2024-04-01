@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BookHouseAPI.Domain.Entities.ManyToMany;
 
 namespace BookHouseAPI.Domain.Entities
 {
@@ -14,6 +10,6 @@ namespace BookHouseAPI.Domain.Entities
         public string Country { get; set; }
         public string? Biography { get; set; } 
         public int BooksCount { get; set; }
-        public ICollection<Book> Books { get; set; }
+        public ICollection<BookAuthors> BookAuthors { get; set; }
     }
 }
