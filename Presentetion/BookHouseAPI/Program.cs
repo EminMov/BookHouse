@@ -47,23 +47,23 @@ namespace BookHouseAPI
                 .WriteTo.Console(Serilog.Events.LogEventLevel.Error)
                 .WriteTo.File("Logs/myJsonLogs.json")
                 .WriteTo.File("Logs/mylogs.txt")
-                .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sinkOptions:
-                new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
-                {
-                    TableName = "MySerilog",
-                    AutoCreateSqlTable = true
-                },
+                //.WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sinkOptions:
+                //new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
+                //{
+                //    TableName = "MySerilog",
+                //    AutoCreateSqlTable = true
+                //},
 
-                null, null, LogEventLevel.Warning, null,
-                columnOptions: new ColumnOptions
-                {
-                    AdditionalColumns = new Collection<SqlColumn>
-                    {
-                        new SqlColumn(columnName:"User_Id",SqlDbType.NVarChar)
-                    }
-                },
-                null, null
-                )
+                //null, null, LogEventLevel.Warning, null,
+                //columnOptions: new ColumnOptions
+                //{
+                //    AdditionalColumns = new Collection<SqlColumn>
+                //    {
+                //        new SqlColumn(columnName:"User_Id",SqlDbType.NVarChar)
+                //    }
+                //},
+                //null, null
+                //)
                 .Enrich.FromLogContext()
                 .MinimumLevel.Information()
                 .CreateLogger();
