@@ -18,8 +18,8 @@ namespace BookHouseAPI.Application.AutoMappers
         public MapperProfile() 
         { 
             CreateMap<Author, AuthorGetDTO>().ReverseMap();
-            CreateMap<Book, BookGetDTO>().ReverseMap();
-            CreateMap<Genre, GenreGetDTO>().ReverseMap();
+            CreateMap<Book, BookDTO>().ReverseMap();
+            CreateMap<Genre, GenreDTO>().ReverseMap();
             CreateMap<Basket, BasketGetDTO>().ReverseMap();
             CreateMap<Review, ReviewGetDTO>().ReverseMap();
 

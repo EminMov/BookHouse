@@ -31,12 +31,6 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddBook([FromBody] BookAddDTO bookAddDTO)
-        {
-            var result = await _bookService.BookAdd(bookAddDTO);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateBook([FromBody] BookUpdateDTO bookUpdateDTO, int id)

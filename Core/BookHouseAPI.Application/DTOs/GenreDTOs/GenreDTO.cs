@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookHouseAPI.Application.DTOs.GenreDTOs
 {
-    public class GenreAddDTO
+    public class GenreDTO
     {
         public string Name { get; set; }
         public string GenreDescription { get; set; }

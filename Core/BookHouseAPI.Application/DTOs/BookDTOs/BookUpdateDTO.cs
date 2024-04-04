@@ -10,6 +10,7 @@ namespace BookHouseAPI.Application.DTOs.BookDTOs
     public class BookUpdateDTO
     {
         public double Price { get; set; }
-        public ICollection<Author> Authors { get; set; }
+        public string Description { get; set; }
+        public DateTime ReleaseDate { get; set; }
     }
 }

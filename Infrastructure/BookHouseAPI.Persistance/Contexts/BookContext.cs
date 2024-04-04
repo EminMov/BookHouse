@@ -1,6 +1,7 @@
 ﻿using BookHouseAPI.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using static BookHouseAPI.Domain.Entities.AppUser;
 
 namespace BookHouseAPI.Persistance.Contexts
@@ -19,24 +20,19 @@ namespace BookHouseAPI.Persistance.Contexts
         public DbSet<Order> Orders { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            builder.Entity<Book>()
-                .HasMany(x => x.BookAuthors)
-                .WithOne(x => x.Book)
-                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Author>()
+            .HasMany(a => a.Books) // Author has many Books, specifies the 'many' side of the relationship
+            .WithOne(b => b.Author) // Book is associated with one Author, specifies the 'one' side of the relationship
+            .HasForeignKey(b => b.AuthorId);
 
-            builder.Entity<Author>()
-                .HasMany(x => x.BookAuthors)
-                .WithOne(x => x.Author)
-                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Genre>()
+                .HasMany(a => a.Books)
+                .WithOne(b => b.Genre)
+                .HasForeignKey(b => b.GenreId);
 
-            base.OnModelCreating(builder);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

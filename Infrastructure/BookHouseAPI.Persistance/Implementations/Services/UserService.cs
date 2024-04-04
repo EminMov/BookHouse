@@ -17,6 +17,11 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             throw new NotImplementedException();
         }
 
+        public Task<ResponseModel<CreateUserResponseDTO>> CreateUserAsync(CreateUserDTO newUser)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ResponseModel<bool>> DeleteUserAsync(string UserIdOrName)
         {
             throw new NotImplementedException();

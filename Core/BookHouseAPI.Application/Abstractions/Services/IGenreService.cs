@@ -11,10 +11,10 @@ namespace BookHouseAPI.Application.Abstractions.Services
 {
     public interface IGenreService
     {
-        public Task<ResponseModel<List<GenreGetDTO>>> GetAllGenres();
-        public Task<ResponseModel<GenreGetDTO>> GenreGetByID(int Id);
-        public Task<ResponseModel<GenreAddDTO>> GenreAdd(GenreAddDTO genreAdd);
-        public Task<ResponseModel<bool>> GenreUpdate(GenreUpdateDTO genreUpdate, int Id);
+        public Task<ResponseModel<List<GenreDTO>>> GetAllGenres();
+        public Task<ResponseModel<GenreDTO>> GenreGetByID(int Id);
+        public Task<ResponseModel<GenreDTO>> GenreAdd(GenreDTO genreAdd);
+        public Task<ResponseModel<bool>> GenreUpdate(GenreDTO genreUpdate, int Id);
         public Task<ResponseModel<bool>> GenreDelete(int Id);
     }
 }

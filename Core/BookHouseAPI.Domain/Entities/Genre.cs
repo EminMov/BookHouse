@@ -8,8 +8,7 @@ namespace BookHouseAPI.Domain.Entities
 {
     public class Genre : BaseEntity
     {
-        public Book Book { get; set; }
-        public int BookID { get; set; }
+        public ICollection<Book> Books { get; set; }
         public string Name { get; set; }
         public string GenreDescription { get; set; }
     }

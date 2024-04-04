@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookHouseAPI.Persistance.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20240323171134_Mig1")]
-    partial class Mig1
+    [Migration("20240404104918_one_to_many")]
+    partial class one_to_many
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,36 +24,6 @@ namespace BookHouseAPI.Persistance.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AuthorBook", b =>
-                {
-                    b.Property<int>("AuthorsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BooksId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AuthorsId", "BooksId");
-
-                    b.HasIndex("BooksId");
-
-                    b.ToTable("AuthorBook");
-                });
-
-            modelBuilder.Entity("BasketBook", b =>
-                {
-                    b.Property<int>("BasketsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BasketsId", "ItemsId");
-
-                    b.HasIndex("ItemsId");
-
-                    b.ToTable("BasketBook");
-                });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.AppUser", b =>
                 {
@@ -78,11 +48,9 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -121,7 +89,6 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -174,26 +141,18 @@ namespace BookHouseAPI.Persistance.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Biography")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BooksCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -229,7 +188,8 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderID");
+                    b.HasIndex("OrderID")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -247,20 +207,20 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BasketId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ISBN")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfPages")
-                        .HasColumnType("int");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -272,12 +232,17 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("BasketId");
+
+                    b.HasIndex("GenreId");
 
                     b.ToTable("Books");
                 });
@@ -290,20 +255,13 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BookID")
-                        .HasColumnType("int");
-
                     b.Property<string>("GenreDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookID");
 
                     b.ToTable("Genres");
                 });
@@ -344,7 +302,6 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
@@ -354,7 +311,6 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -475,41 +431,11 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AuthorBook", b =>
-                {
-                    b.HasOne("BookHouseAPI.Domain.Entities.Author", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookHouseAPI.Domain.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BasketBook", b =>
-                {
-                    b.HasOne("BookHouseAPI.Domain.Entities.Basket", null)
-                        .WithMany()
-                        .HasForeignKey("BasketsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookHouseAPI.Domain.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Basket", b =>
                 {
                     b.HasOne("BookHouseAPI.Domain.Entities.Order", "Order")
-                        .WithMany("Basket")
-                        .HasForeignKey("OrderID")
+                        .WithOne("Basket")
+                        .HasForeignKey("BookHouseAPI.Domain.Entities.Basket", "OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -527,17 +453,26 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasOne("BookHouseAPI.Domain.Entities.AppUser", null)
                         .WithMany("Books")
                         .HasForeignKey("AppUserId");
-                });
 
-            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Genre", b =>
-                {
-                    b.HasOne("BookHouseAPI.Domain.Entities.Book", "Book")
-                        .WithMany("Genres")
-                        .HasForeignKey("BookID")
+                    b.HasOne("BookHouseAPI.Domain.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Book");
+                    b.HasOne("BookHouseAPI.Domain.Entities.Basket", null)
+                        .WithMany("Items")
+                        .HasForeignKey("BasketId");
+
+                    b.HasOne("BookHouseAPI.Domain.Entities.Genre", "Genre")
+                        .WithMany("Books")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>
@@ -552,7 +487,7 @@ namespace BookHouseAPI.Persistance.Migrations
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Review", b =>
                 {
                     b.HasOne("BookHouseAPI.Domain.Entities.Book", "Book")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("BookID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -624,11 +559,19 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Book", b =>
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Author", b =>
                 {
-                    b.Navigation("Genres");
+                    b.Navigation("Books");
+                });
 
-                    b.Navigation("Reviews");
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Basket", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Genre", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>

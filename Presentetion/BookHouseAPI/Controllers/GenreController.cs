@@ -32,14 +32,14 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddBook([FromBody] GenreAddDTO genreAddDTO)
+        public async Task<IActionResult> AddBook([FromBody] GenreDTO genreAddDTO)
         {
             var result = await _genreService.GenreAdd(genreAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateGenre([FromBody] GenreUpdateDTO genreUpdateDTO, int id)
+        public async Task<IActionResult> UpdateGenre([FromBody] GenreDTO genreUpdateDTO, int id)
         {
             var result = await _genreService.GenreUpdate(genreUpdateDTO, id);
             return StatusCode(result.StatusCode, result);

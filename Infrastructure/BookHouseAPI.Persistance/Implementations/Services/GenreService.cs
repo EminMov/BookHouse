@@ -22,9 +22,9 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<ResponseModel<GenreAddDTO>> GenreAdd(GenreAddDTO genreAdd)
+        public async Task<ResponseModel<GenreDTO>> GenreAdd(GenreDTO genreAdd)
         {
-            ResponseModel<GenreAddDTO> response = new ResponseModel<GenreAddDTO>();
+            ResponseModel<GenreDTO> response = new ResponseModel<GenreDTO>();
             Genre genre = new Genre();
 
             genre.Name = genreAdd.Name;
@@ -73,13 +73,13 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<GenreGetDTO>> GenreGetByID(int Id)
+        public async Task<ResponseModel<GenreDTO>> GenreGetByID(int Id)
         {
-            ResponseModel<GenreGetDTO> response = new ResponseModel<GenreGetDTO>();
+            ResponseModel<GenreDTO> response = new ResponseModel<GenreDTO>();
             var data = await _unitOfWork.GetRepository<Genre>().GetByIdAsync(Id);
             if (data != null)
             {
-                var get = _mapper.Map<GenreGetDTO>(data);
+                var get = _mapper.Map<GenreDTO>(data);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.Data = get;
@@ -95,13 +95,14 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<bool>> GenreUpdate(GenreUpdateDTO genreUpdate, int Id)
+        public async Task<ResponseModel<bool>> GenreUpdate(GenreDTO genreUpdate, int Id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             var data = await _unitOfWork.GetRepository<Genre>().GetByIdAsync(Id);
 
             if (data != null)
             {
+                data.Name = genreUpdate.Name;
                 data.GenreDescription = genreUpdate.GenreDescription;
 
                 await _unitOfWork.GetRepository<Genre>().AddAsync(data);
@@ -132,13 +133,13 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<List<GenreGetDTO>>> GetAllGenres()
+        public async Task<ResponseModel<List<GenreDTO>>> GetAllGenres()
         {
-            ResponseModel<List<GenreGetDTO>> response = new ResponseModel<List<GenreGetDTO>>();
+            ResponseModel<List<GenreDTO>> response = new ResponseModel<List<GenreDTO>>();
             var data = _unitOfWork.GetRepository<Genre>().GetAll();
             if (data != null)
             {
-                var get = _mapper.Map<List<GenreGetDTO>>(data);
+                var get = _mapper.Map<List<GenreDTO>>(data);
                 response.Data = get;
                 response.Success = true;
                 response.StatusCode = 200;

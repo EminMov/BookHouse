@@ -4,6 +4,7 @@ using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.AuthorDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
@@ -43,7 +44,9 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         public async Task<ResponseModel<AuthorGetDTO>> AuthorGetByIDAsync(int Id)
         {
             ResponseModel<AuthorGetDTO> response = new ResponseModel<AuthorGetDTO>();
-            var data = await _unitOfWork.GetRepository<Author>().GetByIdAsync(Id);
+            var data = await _unitOfWork.GetRepository<Author>()
+                .GetByIdAsync(Id);
+
             if(data != null)
             {
                 var get = _mapper.Map<AuthorGetDTO>(data);
@@ -67,10 +70,25 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             ResponseModel<AuthorAddDTO> response = new ResponseModel<AuthorAddDTO>();
             Author author = new Author();
 
-            author.Name = authorAdd.Name;
             author.FirstName = authorAdd.FirstName;
             author.LastName = authorAdd.LastName;
             author.Country = authorAdd.Country;
+            author.Biography = authorAdd.Biography;
+
+            foreach (var book in authorAdd.Books)
+            {
+                author.Books =
+                [
+                    new Book
+                    {
+                        Title = book.Title,
+                        ISBN = book.ISBN,
+                        GenreId=book.GenreId,
+                    },
+                ];
+            }
+            
+            author.BooksCount = author.Books.Count;
 
             var data = _unitOfWork.GetRepository<Author>().AddAsync(author);
             var savedata = await _unitOfWork.SaveChangesAsync();
@@ -98,10 +116,20 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
             if (data is not null)
             {
-                data.Name = authorUpdate.Name;
-                data.FirstName = authorUpdate.FirstName;
-                data.LastName = authorUpdate.LastName;
-                data.Country = authorUpdate.Country;
+
+                foreach (var book in authorUpdate.Books)
+                {
+                    data.Books =
+                    [
+                        new Book
+                        {
+                            Title = book.Title,
+                            ISBN = book.ISBN,
+                            GenreId=book.GenreId,
+                        },
+                    ];
+                }
+                data.BooksCount = data.Books.Count;
 
                 try
                 {
@@ -139,11 +167,12 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         {
             var data = _unitOfWork.GetRepository<Author>()
                 .GetAll()
-                .Include(x => x.BookAuthors)
-                .ThenInclude(x => x.Book);
+                .Include(x => x.Books)
+                .ToList();
 
             if (data is not null )
             {
+                
                 var get = _mapper.Map<List<AuthorGetDTO>>(data);
 
                 return new ResponseModel<List<AuthorGetDTO>>
