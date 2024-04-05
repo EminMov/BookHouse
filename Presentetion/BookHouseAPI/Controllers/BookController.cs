@@ -25,7 +25,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-id/{id}")]
-        public async Task<IActionResult> GetBookById(int id)
+        public async Task<IActionResult> GetBookById([FromQuery] int id)
         {
             var result = await _bookService.BookGetByID(id);
             return StatusCode(result.StatusCode, result);
@@ -40,7 +40,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook([FromQuery] int id)
         {
             var result = await _bookService.BookDelete(id);
             return StatusCode(result.StatusCode, result);

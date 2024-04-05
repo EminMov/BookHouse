@@ -24,20 +24,20 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-id/{id}")]
-        public async Task<IActionResult> GetAuthorById(int id)
+        public async Task<IActionResult> GetAuthorById([FromQuery] int id)
         {
             var result = await _authorService.AuthorGetByIDAsync(id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("add")]
+        [HttpPost("add")]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorAddDTO authorAddDTO)
         {
             var result = await _authorService.AuthorAddAsync(authorAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateAuthor([FromBody] AuthorUpdateDTO authorUpdateDTO, int id) 
         {
             var result = await _authorService.AuthorUpdateAsync(authorUpdateDTO, id);
@@ -45,7 +45,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteAuthor(int id) 
+        public async Task<IActionResult> DeleteAuthor([FromQuery] int id) 
         { 
             var result = await _authorService.AuthorDeleteAsync(id);
             return StatusCode(result.StatusCode, result);

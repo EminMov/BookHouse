@@ -17,7 +17,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-book-id/{id}")]
-        public async Task<IActionResult> GetReviewByBookId(int id)
+        public async Task<IActionResult> GetReviewByBookId([FromQuery] int id)
         {
             var result = await _reviewService.GetReviewsByBookIdAsync(id);
             return StatusCode(result.StatusCode, result);
@@ -38,7 +38,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteReview(int id)
+        public async Task<IActionResult> DeleteReview([FromQuery] int id)
         {
             var result = await _reviewService.DeleteReviewAsync(id);
             return StatusCode(result.StatusCode, result);

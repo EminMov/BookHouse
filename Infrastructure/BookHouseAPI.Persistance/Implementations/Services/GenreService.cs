@@ -105,7 +105,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 data.Name = genreUpdate.Name;
                 data.GenreDescription = genreUpdate.GenreDescription;
 
-                await _unitOfWork.GetRepository<Genre>().AddAsync(data);
+                 _unitOfWork.GetRepository<Genre>().Update(data);
                 var rawAffected = await _unitOfWork.SaveChangesAsync();
                 if (rawAffected > 0)
                 {

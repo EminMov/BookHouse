@@ -17,21 +17,21 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-order-by-user-id")]
-        public async Task<IActionResult> GetOrdersByUserIdAsync(string userId)
+        public async Task<IActionResult> GetOrdersByUserIdAsync([FromQuery] string userId)
         {
             var result = await _orderService.GetOrdersByUserIdAsync(userId);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpPost("create-order")]
-        public async Task<IActionResult> CreateOrderAsync(OrderAddDTO orderDTO)
+        public async Task<IActionResult> CreateOrderAsync([FromBody] OrderAddDTO orderDTO)
         {
             var result = await _orderService.CreateOrderAsync(orderDTO);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpPut("return-book")]
-        public async Task<IActionResult> ReturnBookAsync(ReturnBookDTO returnBookDTO)
+        public async Task<IActionResult> ReturnBookAsync([FromBody] ReturnBookDTO returnBookDTO)
         {
             var result = await _orderService.ReturnBookAsync(returnBookDTO);
             return StatusCode(result.StatusCode, result);

@@ -3,9 +3,12 @@ using BookHouseAPI.Application.DTOs.TokenDTOs;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,14 +25,53 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             _userManager = userManager;
         }
 
-        public Task<TokenDTO> CreateAccessToken(AppUser user)
+        public async Task<TokenDTO> CreateAccessToken(AppUser user)
         {
-            throw new NotImplementedException();
+            TokenDTO tokenDTO = new();
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration["Token:SecurityKey"]));
+
+            SigningCredentials signingCredential = new(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+            tokenDTO.Expiration = DateTime.UtcNow.AddMinutes(5);
+            JwtSecurityToken securityToken = new JwtSecurityToken(
+                audience: _configuration["Token:Audience"],
+                issuer: _configuration["Token:Issuer"],
+                expires: tokenDTO.Expiration,
+                notBefore: DateTime.UtcNow,
+                signingCredentials: signingCredential,
+                claims: claims);
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            tokenDTO.AccessToken = tokenHandler.WriteToken(securityToken);
+
+            tokenDTO.RefreshToken = CreateRefreshToken();
+
+            return tokenDTO;
         }
 
         public string CreateRefreshToken()
         {
-            throw new NotImplementedException();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(
+                _configuration["Token:RefreshTokenSecret"]);
+
+            var tokenDescription = new SecurityTokenDescriptor
+            {
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var refreshToken = tokenHandler.CreateToken(tokenDescription);
+            return tokenHandler.WriteToken(refreshToken);
         }
     }
 }

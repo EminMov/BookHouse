@@ -9,10 +9,10 @@ namespace BookHouseAPI.Application.Abstractions.Services
 {
     public interface IRoleService
     {
-        Task<ResponseModel<object>> GetAllRoles();
-        Task<ResponseModel<object>> GetRoleById(string id);
-        Task<ResponseModel<bool>> CreateRole(string name);
-        Task<ResponseModel<bool>> UpdateRole(string id, string name);
-        Task<ResponseModel<bool>> DeleteRole(string id);
+        Task<ResponseModel<object>> GetAllRolesAsync();
+        Task<ResponseModel<object>> GetRoleByIdAsync(string id);
+        Task<ResponseModel<bool>> CreateRoleAsync(string name);
+        Task<ResponseModel<bool>> UpdateRoleAsync(string id, string name);
+        Task<ResponseModel<bool>> DeleteRoleAsync(string id);
     }
 }

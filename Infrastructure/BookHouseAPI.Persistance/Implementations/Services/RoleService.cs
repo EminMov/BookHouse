@@ -18,7 +18,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         {
             _roleManager = roleManager;
         }
-        public async Task<ResponseModel<bool>> CreateRole(string name)
+        public async Task<ResponseModel<bool>> CreateRoleAsync(string name)
         {
             ResponseModel<bool> responseModel = new ResponseModel<bool>();
 
@@ -42,7 +42,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public async Task<ResponseModel<bool>> DeleteRole(string id)
+        public async Task<ResponseModel<bool>> DeleteRoleAsync(string id)
         {
             ResponseModel<bool> responseModel = new ResponseModel<bool>();
             var data = await _roleManager.FindByIdAsync(id);
@@ -61,7 +61,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public async Task<ResponseModel<object>> GetAllRoles()
+        public async Task<ResponseModel<object>> GetAllRolesAsync()
         {
             ResponseModel<object> responseModel = new();
             var data = await _roleManager.Roles.ToListAsync();
@@ -79,7 +79,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public async Task<ResponseModel<object>> GetRoleById(string id)
+        public async Task<ResponseModel<object>> GetRoleByIdAsync(string id)
         {
             ResponseModel<object> responseModel = new();
             var data = await _roleManager.FindByIdAsync(id);
@@ -97,7 +97,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public async Task<ResponseModel<bool>> UpdateRole(string id, string name)
+        public async Task<ResponseModel<bool>> UpdateRoleAsync(string id, string name)
         {
             ResponseModel<bool> responseModel = new()
             {

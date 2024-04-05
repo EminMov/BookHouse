@@ -25,7 +25,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-id/{id}")]
-        public async Task<IActionResult> GetGenreById(int id)
+        public async Task<IActionResult> GetGenreById([FromQuery] int id)
         {
             var result = await _genreService.GenreGetByID(id);
             return StatusCode(result.StatusCode, result);
@@ -46,7 +46,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteGenre(int id)
+        public async Task<IActionResult> DeleteGenre([FromQuery] int id)
         {
             var result = await _genreService.GenreDelete(id);
             return StatusCode(result.StatusCode, result);

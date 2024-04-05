@@ -18,6 +18,10 @@ using BookHouseAPI.Persistance.Implementetions.Repositories;
 using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Persistance.Implementetions.Services;
 using System.Text.Json.Serialization;
+using Serilog.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace BookHouseAPI
 {
@@ -46,6 +50,65 @@ namespace BookHouseAPI
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new()
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidAudience = builder.Configuration["Token:Audience"],
+
+                    ValidIssuer = builder.Configuration["Token:Issuer"],
+
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
+
+                    LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false,
+
+                    NameClaimType = ClaimTypes.Name,
+                    RoleClaimType = ClaimTypes.Role
+                };
+            });
+
+            //builder.Services.AddSwaggerGen(swagger =>
+            //{
+            //    swagger.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            //    {
+            //        Version = "v1",
+            //        Title = "School Student API",
+            //        Description = "ASP.Net Core 6 Web API"
+            //    });
+            //    swagger.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+            //    {
+            //        Name = "Authorization",
+            //        Type = SecuritySchemeType.Http,
+            //        Scheme = "Bearer",
+            //        BearerFormat = "JWT",
+            //        In = ParameterLocation.Header,
+            //        Description = "JWT Authorization header using the Bearer Scheme."
+            //    });
+            //    swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+            //    {
+            //        {
+            //            new OpenApiSecurityScheme
+            //            {
+            //                Reference = new OpenApiReference
+            //                {
+            //                    Type = ReferenceType.SecurityScheme,
+            //                    Id = "Bearer"
+            //                }
+            //            },
+            //            new string[]{ }
+            //        }
+
+            //    });
+            //});
 
             Logger? log = new LoggerConfiguration()
                 .WriteTo.Console(Serilog.Events.LogEventLevel.Error)
@@ -92,6 +155,12 @@ namespace BookHouseAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.Use(async (context, next) =>
+            {
+                var username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
+                LogContext.PushProperty("User_Name", username);
+                await next(context);
+            });
 
             app.MapControllers();
 

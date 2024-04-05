@@ -44,9 +44,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         public async Task<ResponseModel<AuthorGetDTO>> AuthorGetByIDAsync(int Id)
         {
             ResponseModel<AuthorGetDTO> response = new ResponseModel<AuthorGetDTO>();
-            var data = await _unitOfWork.GetRepository<Author>()
-                .GetByIdAsync(Id);
-
+            var data = await _unitOfWork.GetRepository<Author>().Table.Include(x => x.Books).FirstOrDefaultAsync(x => x.Id == Id);
+            
             if(data != null)
             {
                 var get = _mapper.Map<AuthorGetDTO>(data);
@@ -129,7 +128,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                         },
                     ];
                 }
-                data.BooksCount = data.Books.Count;
+                data.BooksCount += data.Books.Count;
 
                 try
                 {
@@ -165,15 +164,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
         public async Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthorsAsync()
         {
-            var data = _unitOfWork.GetRepository<Author>()
+            var data = await _unitOfWork.GetRepository<Author>()
                 .GetAll()
                 .Include(x => x.Books)
-                .ToList();
-
+                .ToListAsync();
+            
+            
+            
             if (data is not null )
             {
-                
-                var get = _mapper.Map<List<AuthorGetDTO>>(data);
+                var get = _mapper.Map<List<Author>, List<AuthorGetDTO>>(data);
 
                 return new ResponseModel<List<AuthorGetDTO>>
                 {

@@ -18,7 +18,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetBasketByUser(string id)
+        public async Task<IActionResult> GetBasketByUser([FromQuery] string id)
         {
             var result = await _basketService.GetAllBasketAsync(id);
             return StatusCode(result.StatusCode, result);
@@ -39,7 +39,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> RemoveFromBasket(string userId, int bookId)
+        public async Task<IActionResult> RemoveFromBasket([FromQuery] string userId, int bookId)
         {
             var result = await _basketService.RemoveFromBasketAsync(userId, bookId);
             return StatusCode(result.StatusCode, result);
