@@ -13,35 +13,35 @@ namespace BookHouseAPI.Controllers
         {
             _roleService = roleService;
         }
-        [HttpPost("create-role")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateRole(string role)
         {
             var result = await _roleService.CreateRoleAsync(role);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("delete-role")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var result = await _roleService.DeleteRoleAsync(id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("get-all")]
+        [HttpGet]
         public async Task<IActionResult> GetAllRoles()
         {
             var result = await _roleService.GetAllRolesAsync();
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("get-by-id")]
+        [HttpGet]
         public async Task<IActionResult> GetRoleById(string id)
         {
             var result = await _roleService.GetRoleByIdAsync(id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<IActionResult> UpdateRole(string id, string name)
         {
             var result = await _roleService.UpdateRoleAsync(id, name);

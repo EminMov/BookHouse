@@ -4,8 +4,12 @@ using BookHouseAPI.Application.DTOs.UserDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +25,36 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             _userManager = userManager;
             _mapper = mapper;
         }
-        public Task<ResponseModel<bool>> AssignRoleToUserAsync(string userId, string newPassword)
+        public async Task<ResponseModel<bool>> AssignRoleToUserAsnyc(string userId, string[] roles)
         {
-            throw new NotImplementedException();
+            AppUser user = await _userManager.FindByIdAsync(userId);
+
+            ResponseModel<bool> resModel = new ResponseModel<bool>() { Data = false, StatusCode = 400 };
+
+            try
+            {
+                if (user != null)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    await _userManager.RemoveFromRolesAsync(user, userRoles);
+                    await _userManager.AddToRolesAsync(user, roles);
+
+                    resModel.Data = true;
+                    resModel.StatusCode = 200;
+
+                    return resModel;
+                }
+                else
+                {
+                    return resModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync("Error: Assign Role To User");
+                Log.Error(ex.Message + ex.InnerException);
+                return resModel;
+            }
         }
 
         public async Task<ResponseModel<CreateUserResponseDTO>> CreateUserAsync(CreateUserDTO newUser)
@@ -60,9 +91,37 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public Task<ResponseModel<bool>> DeleteUserAsync(string UserIdOrName)
+        public async Task<ResponseModel<bool>> DeleteUserAsync(string userIdOrName)
         {
-            throw new NotImplementedException();
+            AppUser user = await _userManager.FindByIdAsync(userIdOrName);
+            ResponseModel<bool> resModel = new ResponseModel<bool>() { Data = false, StatusCode = 400 };
+
+            if (user == null)
+                user = await _userManager.FindByNameAsync(userIdOrName);
+
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            try
+            {
+                var data = await _userManager.DeleteAsync(user);
+                if (data.Succeeded)
+                {
+                    resModel.Data = true;
+                    resModel.StatusCode = 200;
+                    return resModel;
+                }
+                else
+                {
+                    return resModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync("Error: Delet User Asyn");
+                Log.Error(ex.Message + ex.InnerException);
+                return resModel;
+            }
         }
 
         public Task ForgetPasswordAsync(string userId, string refreshToken, string newPassword)
@@ -70,24 +129,141 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<List<UserGetDTO>>> GetAllUserAsync()
+        public async Task<ResponseModel<List<UserGetDTO>>> GetAllUserAsync()
         {
-            throw new NotImplementedException();
+            var users = await _userManager.Users.ToListAsync();
+            ResponseModel<List<UserGetDTO>> resModel = new ResponseModel<List<UserGetDTO>>() { Data = null, StatusCode = 400 };
+
+            try
+            {
+                if (users != null && users.Count > 0)
+                {
+                    var data = _mapper.Map<List<UserGetDTO>>(users);
+
+                    resModel.Data = data;
+                    resModel.StatusCode = 200;
+                    return resModel;
+
+                }
+                else
+                {
+                    resModel.Data = null;
+                    resModel.StatusCode = 400;
+                    return resModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync("Error GetAllUser");
+                Log.Error(ex.Message + ex.InnerException);
+                return resModel;
+            }
         }
 
-        public Task<ResponseModel<string[]>> GetRolesToUserAsync(string UserIdOrName)
+        public async Task<ResponseModel<string[]>> GetRolesToUserAsync(string userIdOrName)
         {
-            throw new NotImplementedException();
+            ResponseModel<string[]> resModel = new ResponseModel<string[]>() { StatusCode = 400, Data = null };
+
+            AppUser user = await _userManager.FindByIdAsync(userIdOrName);
+
+            if (user == null)
+                user = await _userManager.FindByNameAsync(userIdOrName);
+            try
+            {
+                if (user != null)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    resModel.Data = userRoles.ToArray();
+                    resModel.StatusCode = 200;
+                    return resModel;
+                }
+                return resModel;
+            }
+            catch (Exception ex)
+            {
+
+                await Console.Out.WriteLineAsync("Error: Delet User Asyn");
+                Log.Error(ex.Message + ex.InnerException);
+                return resModel;
+            }
         }
 
-        public Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate)
+        public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
         {
-            throw new NotImplementedException();
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                byte[] tokenBytes = WebEncoders.Base64UrlDecode(resetToken);
+                resetToken = Encoding.UTF8.GetString(tokenBytes);
+
+                IdentityResult result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                return;
+            }
         }
 
-        public Task<ResponseModel<bool>> UpdateUserAsync(UserUpdateDTO updateUser)
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate)
         {
-            throw new NotImplementedException();
+            if (user != null)
+            {
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndTime = accessTokenDate.AddMinutes(10);
+                await _userManager.UpdateAsync(user);
+            }
+
+        }
+
+        public async Task<ResponseModel<bool>> UpdateUserAsync(UserUpdateDTO updateUser)
+        {
+            AppUser user = await _userManager.FindByIdAsync(updateUser.UserId);
+
+            ResponseModel<bool> resModel = new ResponseModel<bool>() { Data = false, StatusCode = 400 };
+
+            if (user == null)
+                user = await _userManager.FindByNameAsync(updateUser.UserName); //name update elese bele id verecek mecbur onda
+
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            try
+            {
+                user.UserName = updateUser.UserName;
+                user.BirthDate = updateUser.BirthDate;
+                user.Email = updateUser.Email;
+                user.FirstName = updateUser.FirstName;
+                user.LastName = updateUser.LastName;
+
+                var data = await _userManager.UpdateAsync(user);
+
+                if (data.Succeeded)
+                {
+                    resModel.Data = true;
+                    resModel.StatusCode = 200;
+
+                    return resModel;
+                }
+                else
+                {
+                    return resModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync("Error: Update User Asyn");
+                Log.Error(ex.Message + ex.InnerException);
+                return resModel;
+            }
         }
     }
 }

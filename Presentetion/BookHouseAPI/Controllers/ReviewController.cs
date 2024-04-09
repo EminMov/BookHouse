@@ -23,21 +23,21 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("add-review")]
+        [HttpPost]
         public async Task<IActionResult> AddReview([FromBody] ReviewAddDTO reviewAddDTO)
         {
             var result = await _reviewService.AddReviewAsync(reviewAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("update-review")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateReview([FromBody] ReviewUpdateDTO reviewUpdateDTO, int id)
         {
             var result = await _reviewService.UpdateReviewAsync(id, reviewUpdateDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> DeleteReview([FromQuery] int id)
         {
             var result = await _reviewService.DeleteReviewAsync(id);

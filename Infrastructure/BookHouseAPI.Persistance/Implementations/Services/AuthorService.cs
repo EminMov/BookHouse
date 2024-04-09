@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
-    public class AuthorService : IAuthtorService
+    public class AuthorService : IAuthorService
     {
         private readonly IMapper _mapper;
         private IUnitOfWork _unitOfWork;

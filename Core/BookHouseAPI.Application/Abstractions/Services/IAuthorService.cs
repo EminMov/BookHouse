@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookHouseAPI.Application.Abstractions.Services
 {
-    public interface IAuthtorService
+    public interface IAuthorService
     {
         public Task<ResponseModel<List<AuthorGetDTO>>> GetAllAuthorsAsync();
         public Task<ResponseModel<AuthorGetDTO>> AuthorGetByIDAsync(int Id);

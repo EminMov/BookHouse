@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace BookHouseAPI.Extensions.GlobalExceptions
 {
-    public static class GlobalExceptionHandlingExtesion
+    public static class GlobalExceptionHandlingExtention
     {
         public static void ConfigureExtention(this IApplicationBuilder applicationBuilder)
         {

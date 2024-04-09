@@ -15,7 +15,7 @@ namespace BookHouseAPI.Controllers
             _userService = userService;
         }
 
-        [HttpPost("create-user")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateUser(CreateUserDTO newUser)
         {
             var result = await _userService.CreateUserAsync(newUser);

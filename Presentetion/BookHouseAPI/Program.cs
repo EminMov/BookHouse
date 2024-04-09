@@ -22,6 +22,7 @@ using Serilog.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.OpenApi.Models;
 
 namespace BookHouseAPI
 {
@@ -44,7 +45,7 @@ namespace BookHouseAPI
             builder.Services.AddAutoMapper(typeof(MapperProfile));
             builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<BookContext>().AddDefaultTokenProviders();
             builder.Services.AddScoped<IBookService, BookService>();
-            builder.Services.AddScoped<IAuthtorService, AuthorService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -76,61 +77,61 @@ namespace BookHouseAPI
                 };
             });
 
-            //builder.Services.AddSwaggerGen(swagger =>
-            //{
-            //    swagger.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            //    {
-            //        Version = "v1",
-            //        Title = "School Student API",
-            //        Description = "ASP.Net Core 6 Web API"
-            //    });
-            //    swagger.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
-            //    {
-            //        Name = "Authorization",
-            //        Type = SecuritySchemeType.Http,
-            //        Scheme = "Bearer",
-            //        BearerFormat = "JWT",
-            //        In = ParameterLocation.Header,
-            //        Description = "JWT Authorization header using the Bearer Scheme."
-            //    });
-            //    swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
-            //    {
-            //        {
-            //            new OpenApiSecurityScheme
-            //            {
-            //                Reference = new OpenApiReference
-            //                {
-            //                    Type = ReferenceType.SecurityScheme,
-            //                    Id = "Bearer"
-            //                }
-            //            },
-            //            new string[]{ }
-            //        }
+            builder.Services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Book House API",
+                    Description = "ASP.Net Core 8 Web API"
+                });
+                swagger.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer Scheme."
+                });
+                swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{ }
+                    }
 
-            //    });
-            //});
+                });
+            });
 
             Logger? log = new LoggerConfiguration()
                 .WriteTo.Console(Serilog.Events.LogEventLevel.Error)
-                .WriteTo.File("Logs/myJsonLogs.json")
+                .WriteTo.File("Logs/myJsonLogs.json")//date-time
                 .WriteTo.File("Logs/mylogs.txt")
-                //.WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sinkOptions:
-                //new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
-                //{
-                //    TableName = "MySerilog",
-                //    AutoCreateSqlTable = true
-                //},
+                .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sinkOptions:
+                new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
+                {
+                    TableName = "MySerilog",
+                    AutoCreateSqlTable = true
+                },
 
-                //null, null, LogEventLevel.Warning, null,
-                //columnOptions: new ColumnOptions
-                //{
-                //    AdditionalColumns = new Collection<SqlColumn>
-                //    {
-                //        new SqlColumn(columnName:"User_Id",SqlDbType.NVarChar)
-                //    }
-                //},
-                //null, null
-                //)
+                null, null, LogEventLevel.Warning, null,
+                columnOptions: new ColumnOptions
+                {
+                    AdditionalColumns = new Collection<SqlColumn>
+                    {
+                        new SqlColumn(columnName:"User_Id",SqlDbType.NVarChar)
+                    }
+                },
+                null, null
+                )
                 .Enrich.FromLogContext()
                 .MinimumLevel.Information()
                 .CreateLogger();
@@ -149,6 +150,8 @@ namespace BookHouseAPI
             }
 
             app.UseHttpsRedirection();
+
+            //app.ConfigureExceptionHandler();
 
             app.UseSerilogRequestLogging();
 
