@@ -1,5 +1,6 @@
 ﻿using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.AuthorDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,8 @@ namespace BookHouseAPI.Controllers
             _authorService = authorService;
         }
 
-        [HttpGet("get")]
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetAllAuthors()
         {
             var result = await _authorService.GetAllAuthorsAsync();
@@ -23,7 +25,8 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("get-by-id/{id}")]
+        [HttpGet("get-by-id")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetAuthorById([FromQuery] int id)
         {
             var result = await _authorService.AuthorGetByIDAsync(id);
@@ -31,6 +34,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorAddDTO authorAddDTO)
         {
             var result = await _authorService.AuthorAddAsync(authorAddDTO);
@@ -38,6 +42,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPut("update")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> UpdateAuthor([FromBody] AuthorUpdateDTO authorUpdateDTO, int id) 
         {
             var result = await _authorService.AuthorUpdateAsync(authorUpdateDTO, id);
@@ -45,6 +50,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> DeleteAuthor([FromQuery] int id) 
         { 
             var result = await _authorService.AuthorDeleteAsync(id);

@@ -30,18 +30,19 @@ namespace BookHouseAPI.Persistance.Implementations.Services
         }
         public async Task<ResponseModel<TokenDTO>> LoginAsync(string userNameOrEmail, string password)
         {
+            ResponseModel<TokenDTO> responseModel = new ResponseModel<TokenDTO>();
             AppUser user = await _userManager.FindByNameAsync(userNameOrEmail);
             if (user == null)
                 user = await _userManager.FindByEmailAsync(userNameOrEmail);
 
             if (user == null)
-                return new()
-                {
-                    Data = null,
-                    StatusCode = 400,
-                    Success = false,
-                    Message = "User not found"
-                };
+            {
+                responseModel.Data = null;
+                responseModel.StatusCode = 400;
+                responseModel.Success = false;
+                responseModel.Message = "User not found";
+                return responseModel;
+            }
 
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
@@ -50,17 +51,16 @@ namespace BookHouseAPI.Persistance.Implementations.Services
             {
                 TokenDTO tokenDTO = await _tokenHandler.CreateAccessToken(user);
                 await _UserService.UpdateRefreshToken(tokenDTO.RefreshToken, user, tokenDTO.Expiration);
-                return new()
-                {
-                    Success = true,
-                    Data = tokenDTO,
-                    StatusCode = 200,
-                    Message = "OK"
-                };
+
+                responseModel.Success = true;
+                responseModel.Data = tokenDTO;
+                responseModel.StatusCode = 200;
+                responseModel.Message = "OK";
+
+                return responseModel;
             }
             else
-                return new() { Data = null, StatusCode = 401 };
-
+                return new() { Data = null, StatusCode = 401, Success = false, Message = "Login faild" };
         }
 
         public async Task<ResponseModel<TokenDTO>> LoginWithRefreshTokenAsync(string refreshToken)

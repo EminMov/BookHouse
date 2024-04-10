@@ -1,6 +1,7 @@
 ﻿using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.OrderDTOs;
 using BookHouseAPI.Application.DTOs.ReturnBookDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-order-by-user-id")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetOrdersByUserIdAsync([FromQuery] string userId)
         {
             var result = await _orderService.GetOrdersByUserIdAsync(userId);
@@ -24,6 +26,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("create-order")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> CreateOrderAsync([FromBody] OrderAddDTO orderDTO)
         {
             var result = await _orderService.CreateOrderAsync(orderDTO);
@@ -31,6 +34,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPut("return-book")]
+        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> ReturnBookAsync([FromBody] ReturnBookDTO returnBookDTO)
         {
             var result = await _orderService.ReturnBookAsync(returnBookDTO);
