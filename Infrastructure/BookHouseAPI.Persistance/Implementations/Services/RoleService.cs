@@ -11,7 +11,7 @@ using static BookHouseAPI.Domain.Entities.AppUser;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
-    internal class RoleService : IRoleService
+    public class RoleService : IRoleService
     {
         readonly RoleManager<AppRole> _roleManager;
         public RoleService(RoleManager<AppRole> roleManager)

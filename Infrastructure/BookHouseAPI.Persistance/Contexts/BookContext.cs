@@ -33,6 +33,11 @@ namespace BookHouseAPI.Persistance.Contexts
                 .WithOne(b => b.Genre)
                 .HasForeignKey(b => b.GenreId);
 
+            modelBuilder.Entity<Book>()
+                .HasMany(a => a.Reviews)
+                .WithOne(b => b.Book)
+                .HasForeignKey(b => b.BookID);
+
             base.OnModelCreating(modelBuilder);
 
             var guidAdmin = Guid.NewGuid().ToString();

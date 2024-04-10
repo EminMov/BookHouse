@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BookHouseAPI.Persistance.Implementations.Services
 {
-    internal class AuthoService : IAuthoService
+    public class AuthoService : IAuthoService
     {
         readonly UserManager<AppUser> _userManager;
         readonly SignInManager<AppUser> _signInManager;

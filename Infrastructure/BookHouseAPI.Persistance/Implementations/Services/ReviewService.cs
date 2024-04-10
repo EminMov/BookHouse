@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
-    internal class ReviewService : IReviewService
+    public class ReviewService : IReviewService
     {
         private IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

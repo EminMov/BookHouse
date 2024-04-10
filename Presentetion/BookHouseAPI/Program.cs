@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
+using BookHouseAPI.Persistance.Implementations.Services;
 
 namespace BookHouseAPI
 {
@@ -41,12 +42,22 @@ namespace BookHouseAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddDbContext<BookContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddAutoMapper(typeof(MapperProfile));
             builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<BookContext>().AddDefaultTokenProviders();
+
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IAuthorService, AuthorService>();
             builder.Services.AddScoped<IGenreService, GenreService>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
+            builder.Services.AddScoped<IOrderService,  OrderService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IUserService, UserService> ();
+            builder.Services.AddScoped<IAuthoService, AuthoService>();
+            builder.Services.AddScoped<ITokenHandler, Persistance.Implementetions.Services.TokenHandler>();
+
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddHttpContextAccessor();
@@ -127,7 +138,7 @@ namespace BookHouseAPI
                 {
                     AdditionalColumns = new Collection<SqlColumn>
                     {
-                        new SqlColumn(columnName:"User_Id",SqlDbType.NVarChar)
+                        new SqlColumn(columnName:"User_Name",SqlDbType.NVarChar)
                     }
                 },
                 null, null

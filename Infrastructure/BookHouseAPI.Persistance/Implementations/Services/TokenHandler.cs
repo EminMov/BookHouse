@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
-    internal class TokenHandler : ITokenHandler
+    public class TokenHandler : ITokenHandler
     {
         readonly IConfiguration _configuration;
         readonly UserManager<AppUser> _userManager;
