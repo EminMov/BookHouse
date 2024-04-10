@@ -17,7 +17,7 @@ namespace BookHouseAPI.Controllers
             _basketService = basketService;
         }
 
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<IActionResult> GetBasketByUser([FromQuery] string id)
         {
             var result = await _basketService.GetAllBasketAsync(id);
@@ -31,14 +31,14 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateBasket([FromBody] BasketUpdateDTO basketUpdateDTO, int id)
         {
             var result = await _basketService.UpdateBasketAsync(basketUpdateDTO, id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> RemoveFromBasket([FromQuery] string userId, int bookId)
         {
             var result = await _basketService.RemoveFromBasketAsync(userId, bookId);

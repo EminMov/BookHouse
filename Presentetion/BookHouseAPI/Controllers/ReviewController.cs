@@ -23,7 +23,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddReview([FromBody] ReviewAddDTO reviewAddDTO)
         {
             var result = await _reviewService.AddReviewAsync(reviewAddDTO);
@@ -37,7 +37,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteReview([FromQuery] int id)
         {
             var result = await _reviewService.DeleteReviewAsync(id);

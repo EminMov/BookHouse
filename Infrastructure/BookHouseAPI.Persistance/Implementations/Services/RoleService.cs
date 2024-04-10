@@ -32,12 +32,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 responseModel.Data = identityResult.Succeeded;
                 responseModel.StatusCode = 200;
+                responseModel.Success = true;
+                responseModel.Message = "Role successfully created";
                 return responseModel;
             }
             else
             {
                 responseModel.Data = false;
                 responseModel.StatusCode = 400;
+                responseModel.Success = false;
+                responseModel.Message = "Such a role exist";
                 return responseModel;
             }
         }
@@ -51,12 +55,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 responseModel.Data = result.Succeeded;
                 responseModel.StatusCode = 200;
+                responseModel.Success = true;
+                responseModel.Message = "Role successfully deleted";
                 return responseModel;
             }
             else
             {
                 responseModel.Data = false;
                 responseModel.StatusCode = 400;
+                responseModel.Success = false;
+                responseModel.Message = "Role found but cant be deleted";
                 return responseModel;
             }
         }
@@ -69,12 +77,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 responseModel.Data = data;
                 responseModel.StatusCode = 200;
+                responseModel.Success = true;
+                responseModel.Message = "All roles";
                 return responseModel;
             }
             else
             {
                 responseModel.Data = false;
-                responseModel.StatusCode = 400;
+                responseModel.StatusCode = 404;
+                responseModel.Success = false;
+                responseModel.Message = "Roles not found";
                 return responseModel;
             }
         }
@@ -87,12 +99,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 responseModel.Data = data;
                 responseModel.StatusCode = 200;
+                responseModel.Success = true;
+                responseModel.Message = $"Role by this id={id}";
                 return responseModel;
             }
             else
             {
                 responseModel.Data = false;
                 responseModel.StatusCode = 400;
+                responseModel.Success = false;
+                responseModel.Message = $"Role by id={id} not found";
                 return responseModel;
             }
         }
@@ -103,6 +119,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 Data = false,
                 StatusCode = 404,
+                Success = false,
+                Message = ""
             };
             var data = await _roleManager.FindByIdAsync(id);
             if (data == null)
@@ -115,6 +133,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 responseModel.Data = true;
                 responseModel.StatusCode = 200;
+                responseModel.Success = true;
+                responseModel.Message = "Role successfully updated";
             }
             return responseModel;
         }

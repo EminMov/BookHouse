@@ -39,6 +39,8 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 {
                     Data = null,
                     StatusCode = 400,
+                    Success = false,
+                    Message = "User not found"
                 };
 
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
@@ -50,8 +52,10 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 await _UserService.UpdateRefreshToken(tokenDTO.RefreshToken, user, tokenDTO.Expiration);
                 return new()
                 {
+                    Success = true,
                     Data = tokenDTO,
                     StatusCode = 200,
+                    Message = "OK"
                 };
             }
             else
@@ -71,6 +75,8 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 {
                     Data = token,
                     StatusCode = 200,
+                    Message = "Login process successfully completed",
+                    Success = true
                 };
             }
             else
@@ -79,6 +85,8 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 {
                     Data = null,
                     StatusCode = 401,
+                    Success = false,
+                    Message = "Refresh token has expired"
                 };
             }
         }
@@ -95,6 +103,8 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 {
                     Data = false,
                     StatusCode = 400,
+                    Success = false,
+                    Message = "LogOut could not be completed"
                 };
 
             user.RefreshTokenEndTime = null;
@@ -109,6 +119,8 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 {
                     Data = true,
                     StatusCode = 200,
+                    Success = true,
+                    Message = "SignOut successfully completed"
                 };
             }
             else
@@ -116,7 +128,9 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 return new()
                 {
                     Data = false,
-                    StatusCode = 400
+                    StatusCode = 400,
+                    Success = false,
+                    Message = "SignOut could not be completed"
                 };
             }
 
@@ -135,6 +149,8 @@ namespace BookHouseAPI.Persistance.Implementations.Services
                 {
                     response.Data = true;
                     response.StatusCode = 200;
+                    response.Success = true;
+                    response.Message = "Password successfully changed";
                     return response;
                 }
             }

@@ -45,14 +45,14 @@ namespace BookHouseAPI.Controllers
             return StatusCode(data.StatusCode, data);
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateUser(UserUpdateDTO model)
         {
             var data = await _userService.UpdateUserAsync(model);
             return StatusCode(data.StatusCode, data);
         }
 
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteToUser(string UserIdOrName)
         {
             var data = await _userService.DeleteUserAsync(UserIdOrName);

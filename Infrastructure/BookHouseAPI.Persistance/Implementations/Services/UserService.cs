@@ -41,6 +41,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
                     resModel.Data = true;
                     resModel.StatusCode = 200;
+                    resModel.Success = true;
+                    resModel.Message = "Role assigned successfully";
 
                     return resModel;
                 }
@@ -70,10 +72,13 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 Email = newUser.Email,
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
-            }, newUser.Password);
+            }, 
+            newUser.Password);
 
             response.Data = new CreateUserResponseDTO { Success = result.Succeeded };
             response.StatusCode = result.Succeeded ? 200 : 400;
+            response.Success = result.Succeeded;
+            response.Message = "Registration completed successfully";
 
             if (!result.Succeeded)
             {
@@ -109,6 +114,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 {
                     resModel.Data = true;
                     resModel.StatusCode = 200;
+                    resModel.Success = true;
+                    resModel.Message = "User successfully deleted";
                     return resModel;
                 }
                 else
@@ -142,6 +149,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
                     resModel.Data = data;
                     resModel.StatusCode = 200;
+                    resModel.Success = true;
+                    resModel.Message = "All users";
                     return resModel;
 
                 }
@@ -149,6 +158,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 {
                     resModel.Data = null;
                     resModel.StatusCode = 400;
+                    resModel.Success = false;
+                    resModel.Message = "Users not found";
                     return resModel;
                 }
             }
@@ -175,6 +186,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     var userRoles = await _userManager.GetRolesAsync(user);
                     resModel.Data = userRoles.ToArray();
                     resModel.StatusCode = 200;
+                    resModel.Success = true;
+                    resModel.Message = $"User roles {userRoles}"; 
                     return resModel;
                 }
                 return resModel;
@@ -250,6 +263,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 {
                     resModel.Data = true;
                     resModel.StatusCode = 200;
+                    resModel.Success = true;
+                    resModel.Message = "User successfully updated";
 
                     return resModel;
                 }

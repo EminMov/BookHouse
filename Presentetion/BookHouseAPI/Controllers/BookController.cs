@@ -16,7 +16,7 @@ namespace BookHouseAPI.Controllers
             _bookService = bookService;
         }
 
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<IActionResult> GetAllBooks()
         {
             var result = await _bookService.GetAllBooks();
@@ -24,7 +24,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("get-by-id/{id}")]
         public async Task<IActionResult> GetBookById([FromQuery] int id)
         {
             var result = await _bookService.BookGetByID(id);
@@ -32,14 +32,14 @@ namespace BookHouseAPI.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateBook([FromBody] BookUpdateDTO bookUpdateDTO, int id)
         {
             var result = await _bookService.BookUpdate(bookUpdateDTO, id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteBook([FromQuery] int id)
         {
             var result = await _bookService.BookDelete(id);

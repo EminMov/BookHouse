@@ -16,7 +16,7 @@ namespace BookHouseAPI.Controllers
             this._authoService = authoService;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(string userNameOrEmail = "Ibbbo", string password = "Ibbb!234")
         {
 
@@ -31,7 +31,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(data.StatusCode, data);
         }
 
-        [HttpPut("[action]")]
+        [HttpPut("LogOut")]
         [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> LogOut(string userNameOrEmail)
         {
