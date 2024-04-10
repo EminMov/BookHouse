@@ -82,7 +82,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     {
                         Title = book.Title,
                         ISBN = book.ISBN,
-                        GenreId=book.GenreId,
+                        GenreId = book.GenreId,
                     },
                 ];
             }

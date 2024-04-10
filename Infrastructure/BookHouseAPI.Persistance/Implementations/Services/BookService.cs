@@ -74,7 +74,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 data.Description = bookUpdate.Description;
                 data.ReleaseDate = bookUpdate.ReleaseDate;
 
-                await _unitOfWork.GetRepository<Book>().AddAsync(data);
+                _unitOfWork.GetRepository<Book>().Update(data);
                 var rawAffected = await _unitOfWork.SaveChangesAsync();
                 if (rawAffected > 0)
                 {

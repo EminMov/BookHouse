@@ -10,6 +10,7 @@ namespace BookHouseAPI.Application.DTOs.BookDTOs
 {
     public class BookDTO
     {
+        public int ID { get; set; }
         public string Title { get; set; }
         public string ISBN { get; set; }
         public int GenreId { get; set; }

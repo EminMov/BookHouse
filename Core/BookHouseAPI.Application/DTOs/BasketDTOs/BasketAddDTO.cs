@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookHouseAPI.Application.DTOs.BookDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,5 @@ namespace BookHouseAPI.Application.DTOs.BasketDTOs
         public string UserId { get; set; }
         public int BookId { get; set; }
         public int Quantity { get; set; }
-        
     }
 }

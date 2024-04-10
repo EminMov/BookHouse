@@ -9,7 +9,7 @@ namespace BookHouseAPI.Domain.Entities
 {
     public class AppUser : IdentityUser<string>
     {
-        public string UserName { get; set; }
+        public override string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }

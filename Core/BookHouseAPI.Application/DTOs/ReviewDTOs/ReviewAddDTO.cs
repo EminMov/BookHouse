@@ -8,7 +8,7 @@ namespace BookHouseAPI.Application.DTOs.ReviewDTOs
 {
     public class ReviewAddDTO
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public int BookId { get; set; }
         public int Grade { get; set; }
         public string Title { get; set; }

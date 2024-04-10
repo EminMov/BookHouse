@@ -38,6 +38,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             review.Comment = reviewAdd.Comment;
             review.DateCreated = DateTime.Now;
             review.BookID = reviewAdd.BookId;
+            review.Grade = reviewAdd.Grade;
 
             var addedReview = await _unitOfWork.GetRepository<Review>().AddAsync(review);
             var saveData = await _unitOfWork.SaveChangesAsync();
@@ -116,7 +117,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 data.Grade = reviewUpdate.Grade;
                 data.Comment = reviewUpdate.Comment;
 
-                await _unitOfWork.GetRepository<Review>().AddAsync(data);
+                _unitOfWork.GetRepository<Review>().Update(data);
                 var rawAffected = await _unitOfWork.SaveChangesAsync();
                 if (rawAffected > 0)
                 {
@@ -136,7 +137,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             else
             {
                 response.Success = false;
-                response.StatusCode = 401;
+                response.StatusCode = 404;
                 response.Data = false;
                 response.Message = "Using this ID, the review was not found";
             }

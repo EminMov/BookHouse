@@ -48,6 +48,10 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 }
                 else
                 {
+                    resModel.Data = false;
+                    resModel.StatusCode = 400;
+                    resModel.Success = false;
+                    resModel.Message = "Error";
                     return resModel;
                 }
             }
@@ -85,7 +89,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 response.Data.Message = string.Join(" \n ", result.Errors.Select(error => $"{error.Code} - {error.Description}"));
             }
 
-            //burdan sorasi default olaraq rol vermekdi usere, bunu admin ile de eletdirmek olar ya da yri method icinde.
+            
 
             AppUser user = await _userManager.FindByNameAsync(newUser.UserName);
             if (user == null)
@@ -167,6 +171,11 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 await Console.Out.WriteLineAsync("Error GetAllUser");
                 Log.Error(ex.Message + ex.InnerException);
+                
+                resModel.Data = null;
+                resModel.StatusCode = 500;
+                resModel.Success = false;
+                resModel.Message = "Inner error";
                 return resModel;
             }
         }

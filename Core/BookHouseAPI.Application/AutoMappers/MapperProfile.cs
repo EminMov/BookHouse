@@ -4,7 +4,9 @@ using BookHouseAPI.Application.DTOs.BasketDTOs;
 using BookHouseAPI.Application.DTOs.BookDTOs;
 using BookHouseAPI.Application.DTOs.GenreDTOs;
 using BookHouseAPI.Application.DTOs.ReviewDTOs;
+using BookHouseAPI.Application.DTOs.UserDTOs;
 using BookHouseAPI.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +34,7 @@ namespace BookHouseAPI.Application.AutoMappers
             CreateMap<Genre, GenreDTO>().ReverseMap();
             CreateMap<Basket, BasketGetDTO>().ReverseMap();
             CreateMap<Review, ReviewGetDTO>().ReverseMap();
-
+            CreateMap<AppUser, UserGetDTO>().ReverseMap();
         }
     }
 }

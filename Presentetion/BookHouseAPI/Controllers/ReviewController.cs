@@ -16,7 +16,7 @@ namespace BookHouseAPI.Controllers
             _reviewService = reviewService;
         }
 
-        [HttpGet("get-by-book-id/{id}")]
+        [HttpGet("get-by-book-id")]
         public async Task<IActionResult> GetReviewByBookId([FromQuery] int id)
         {
             var result = await _reviewService.GetReviewsByBookIdAsync(id);

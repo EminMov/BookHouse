@@ -17,9 +17,8 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(string userNameOrEmail = "Ibbbo", string password = "Ibbb!234")
+        public async Task<IActionResult> Login(string userNameOrEmail = "Emmin", string password = "Emin!234")
         {
-
             var data = await _authoService.LoginAsync(userNameOrEmail, password);
             return StatusCode(data.StatusCode, data);
         }
