@@ -2,6 +2,7 @@
 using BookHouseAPI.Application.Abstractions.IUnitOfWork;
 using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.BasketDTOs;
+using BookHouseAPI.Application.DTOs.BookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         {
             ResponseModel<BasketAddDTO> response = new ResponseModel<BasketAddDTO>();
             Basket basket = new Basket();
+            
 
             var book = await _unitOfWork.GetRepository<Book>().GetByIdAsync(basketAdd.BookId);
             if (book == null)

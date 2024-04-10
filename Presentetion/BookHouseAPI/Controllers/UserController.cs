@@ -26,7 +26,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("assign-role-to-user")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> AssignRoleToUser(string userId, string[] roles)
         {
             var data = await _userService.AssignRoleToUserAsnyc(userId, roles);
@@ -34,7 +34,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-all-users")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var data = await _userService.GetAllUserAsync();
@@ -42,7 +42,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-roles-to-user/{id}")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> GetRolesToUser(string id)
         {
             var data = await _userService.GetRolesToUserAsync(id);
@@ -50,7 +50,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> UpdateUser(UserUpdateDTO model)
         {
             var data = await _userService.UpdateUserAsync(model);
@@ -58,7 +58,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> DeleteToUser(string UserIdOrName)
         {
             var data = await _userService.DeleteUserAsync(UserIdOrName);
