@@ -19,7 +19,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetBasketByUser([FromQuery] string id)
         {
             var result = await _basketService.GetAllBasketAsync(id);
@@ -27,7 +27,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("add-to-basket")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> AddToBasket([FromBody] BasketAddDTO basketAddDTO)
         {
             var result = await _basketService.AddToBasketAsync(basketAddDTO);
@@ -35,7 +35,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPut("update")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> UpdateBasket([FromBody] BasketUpdateDTO basketUpdateDTO, int id)
         {
             var result = await _basketService.UpdateBasketAsync(basketUpdateDTO, id);
@@ -43,7 +43,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> RemoveFromBasket([FromQuery] string userId, int bookId)
         {
             var result = await _basketService.RemoveFromBasketAsync(userId, bookId);

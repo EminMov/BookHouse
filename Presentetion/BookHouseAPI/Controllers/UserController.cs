@@ -49,7 +49,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(data.StatusCode, data);
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> UpdateUser(UserUpdateDTO model)
         {
@@ -57,7 +57,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(data.StatusCode, data);
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete]
         [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> DeleteToUser(string UserIdOrName)
         {

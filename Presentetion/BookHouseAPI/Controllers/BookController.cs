@@ -18,7 +18,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetAllBooks()
         {
             var result = await _bookService.GetAllBooks();
@@ -27,7 +27,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-id")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetBookById([FromQuery] int id)
         {
             var result = await _bookService.BookGetByID(id);
@@ -36,7 +36,7 @@ namespace BookHouseAPI.Controllers
 
 
         [HttpPut("update")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> UpdateBook([FromBody] BookUpdateDTO bookUpdateDTO, int id)
         {
             var result = await _bookService.BookUpdate(bookUpdateDTO, id);
@@ -44,7 +44,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> DeleteBook([FromQuery] int id)
         {
             var result = await _bookService.BookDelete(id);

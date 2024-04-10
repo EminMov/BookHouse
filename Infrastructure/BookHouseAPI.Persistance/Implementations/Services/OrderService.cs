@@ -6,6 +6,7 @@ using BookHouseAPI.Application.DTOs.ReturnBookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,9 +73,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.StatusCode = 500;
-                response.Message = $"An error occurred while creating the order: {ex.Message}";
+                await Console.Out.WriteLineAsync("Error: Create User Async");
+                Log.Error(ex.Message + ex.InnerException);
                 return response;
             }
         }
@@ -109,9 +109,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.StatusCode = 500;
-                response.Message = $"An error occurred while retrieving orders: {ex.Message}";
+                await Console.Out.WriteLineAsync("Error: Get Order By UserId Async");
+                Log.Error(ex.Message + ex.InnerException);
                 return response;
             }
         }
@@ -160,9 +159,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.StatusCode = 500;
-                response.Message = $"An error occurred while returning the book: {ex.Message}";
+                await Console.Out.WriteLineAsync("Error: Return Book Async");
+                Log.Error(ex.Message + ex.InnerException);
                 return response;
             }
         }

@@ -5,6 +5,7 @@ using BookHouseAPI.Application.DTOs.BasketDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,7 +82,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 if (userBasket == null)
                 {
                     response.Success = false;
-                    response.StatusCode = 404; // Not Found
+                    response.StatusCode = 404; 
                     response.Message = "Basket not found for the user";
                     return response;
                 }
@@ -99,7 +100,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 };
 
                 response.Success = true;
-                response.StatusCode = 200; // OK
+                response.StatusCode = 200; 
                 response.Data = basketDTO;
                 response.Message = "Basket retrieved successfully";
 
@@ -107,9 +108,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.StatusCode = 500; // Internal Server Error
-                response.Message = $"An error occurred while retrieving the basket: {ex.Message}";
+                await Console.Out.WriteLineAsync("Error: Get All Basket Async");
+                Log.Error(ex.Message + ex.InnerException);
                 return response;
             }
         }
@@ -128,7 +128,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 if (userBasket == null)
                 {
                     response.Success = false;
-                    response.StatusCode = 404; // Not Found
+                    response.StatusCode = 404; 
                     response.Message = "Basket not found for the user";
                     return response;
                 }
@@ -138,7 +138,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 if (bookToRemove == null)
                 {
                     response.Success = false;
-                    response.StatusCode = 404; // Not Found
+                    response.StatusCode = 404; 
                     response.Message = "Book not found in the basket";
                     return response;
                 }
@@ -150,7 +150,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 response.Success = true;
-                response.StatusCode = 200; // OK
+                response.StatusCode = 200; 
                 response.Data = true;
                 response.Message = "Book removed from the basket successfully";
 
@@ -158,9 +158,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.StatusCode = 500; // Internal Server Error
-                response.Message = $"An error occurred while removing the book from the basket: {ex.Message}";
+                await Console.Out.WriteLineAsync("Error: Remove From Basket Async");
+                Log.Error(ex.Message + ex.InnerException);
                 return response;
             }
         }

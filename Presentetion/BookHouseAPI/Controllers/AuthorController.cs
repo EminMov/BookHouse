@@ -17,7 +17,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetAllAuthors()
         {
             var result = await _authorService.GetAllAuthorsAsync();
@@ -26,7 +26,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-id")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
         public async Task<IActionResult> GetAuthorById([FromQuery] int id)
         {
             var result = await _authorService.AuthorGetByIDAsync(id);
@@ -34,7 +34,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("add")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorAddDTO authorAddDTO)
         {
             var result = await _authorService.AuthorAddAsync(authorAddDTO);
@@ -42,7 +42,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPut("update")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> UpdateAuthor([FromBody] AuthorUpdateDTO authorUpdateDTO, int id) 
         {
             var result = await _authorService.AuthorUpdateAsync(authorUpdateDTO, id);
@@ -50,7 +50,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
         public async Task<IActionResult> DeleteAuthor([FromQuery] int id) 
         { 
             var result = await _authorService.AuthorDeleteAsync(id);
