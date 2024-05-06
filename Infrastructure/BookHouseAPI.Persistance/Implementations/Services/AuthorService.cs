@@ -2,6 +2,7 @@
 using BookHouseAPI.Application.Abstractions.IUnitOfWork;
 using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.AuthorDTOs;
+using BookHouseAPI.Application.DTOs.BookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -45,7 +46,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         {
             ResponseModel<AuthorGetDTO> response = new ResponseModel<AuthorGetDTO>();
             var data = await _unitOfWork.GetRepository<Author>().Table.Include(x => x.Books).FirstOrDefaultAsync(x => x.Id == Id);
-            
+
             if(data != null)
             {
                 var get = _mapper.Map<AuthorGetDTO>(data);

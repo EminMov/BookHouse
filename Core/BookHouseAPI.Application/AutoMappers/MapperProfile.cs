@@ -30,7 +30,7 @@ namespace BookHouseAPI.Application.AutoMappers
             //CreateMap<Author, AuthorGetDTO>()
             //.ForMember(dest => dest.Books, opt => opt.MapFrom(src => src.Books))
             //.ReverseMap();
-
+            CreateMap<Book, BookGetDTO>().ReverseMap();
             CreateMap<Genre, GenreDTO>().ReverseMap();
             CreateMap<Basket, BasketGetDTO>().ReverseMap();
             CreateMap<Review, ReviewGetDTO>().ReverseMap();

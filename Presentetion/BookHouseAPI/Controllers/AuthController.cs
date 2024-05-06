@@ -24,7 +24,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("refresh-token-login")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> RefreshTokenLogin(string refreshToken)
         {
             var data = await _authoService.LoginWithRefreshTokenAsync(refreshToken);
@@ -39,7 +39,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpPost("password-reset-token")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> PasswordReset(string email, string currentPas, string newPas)
         {
             var data = await _authoService.PasswordResetAsnyc(email, currentPas, newPas);

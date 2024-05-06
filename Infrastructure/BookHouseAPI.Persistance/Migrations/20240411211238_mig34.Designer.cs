@@ -4,6 +4,7 @@ using BookHouseAPI.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookHouseAPI.Persistance.Migrations
 {
     [DbContext(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20240411211238_mig34")]
+    partial class mig34
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,27 +103,6 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "2c5dbc5d-1290-4c89-a4c0-24cabd80849a",
-                            AccessFailedCount = 0,
-                            BirthDate = new DateTime(2024, 4, 11, 21, 14, 19, 505, DateTimeKind.Utc).AddTicks(8072),
-                            ConcurrencyStamp = "3ce40980-ee0e-4362-a542-b3690879e5d2",
-                            Email = "admin@example.com",
-                            EmailConfirmed = true,
-                            FirstName = "default",
-                            LastName = "default",
-                            LockoutEnabled = true,
-                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELOjqWF6DN2Gw3doGgMz+wPkqROA5nP9yMoRXhLOiUZg+u32BSosYRr69N4snvrcvg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "e0487500-1a82-415c-a435-02c722160796",
-                            TwoFactorEnabled = false,
-                            UserName = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.AppUser+AppRole", b =>
@@ -148,20 +130,6 @@ namespace BookHouseAPI.Persistance.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "dccc022f-618e-402f-b97a-1bee4237e578",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "d9453074-45de-4412-b3df-8fc4fc0eb297",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Author", b =>
@@ -443,20 +411,11 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(34)
-                        .HasColumnType("nvarchar(34)");
-
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserRole<string>");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -476,20 +435,6 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("BookHouseAPI.Domain.Entities.AppUser+AppUserRoles", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
-
-                    b.HasDiscriminator().HasValue("AppUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "2c5dbc5d-1290-4c89-a4c0-24cabd80849a",
-                            RoleId = "dccc022f-618e-402f-b97a-1bee4237e578"
-                        });
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Basket", b =>

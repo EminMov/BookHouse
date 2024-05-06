@@ -4,6 +4,7 @@ using BookHouseAPI.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookHouseAPI.Persistance.Migrations
 {
     [DbContext(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20240411211111_mig33")]
+    partial class mig33
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,10 +107,10 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2c5dbc5d-1290-4c89-a4c0-24cabd80849a",
+                            Id = "966c93ba-fd7a-496d-9c98-fab695f12f63",
                             AccessFailedCount = 0,
-                            BirthDate = new DateTime(2024, 4, 11, 21, 14, 19, 505, DateTimeKind.Utc).AddTicks(8072),
-                            ConcurrencyStamp = "3ce40980-ee0e-4362-a542-b3690879e5d2",
+                            BirthDate = new DateTime(2024, 4, 11, 21, 11, 11, 167, DateTimeKind.Utc).AddTicks(5835),
+                            ConcurrencyStamp = "eaa38451-76af-453f-a644-da5ae4d5433a",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FirstName = "default",
@@ -115,9 +118,9 @@ namespace BookHouseAPI.Persistance.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELOjqWF6DN2Gw3doGgMz+wPkqROA5nP9yMoRXhLOiUZg+u32BSosYRr69N4snvrcvg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFyii2+5RNoWBZGOJjdIV7SMIZQtKz4lX4e8wIZpJONg5z/6FABQT8DXSXH+tHPXQA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e0487500-1a82-415c-a435-02c722160796",
+                            SecurityStamp = "8459e1db-007b-458f-a4c3-ec3d80c32e4d",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -152,13 +155,13 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dccc022f-618e-402f-b97a-1bee4237e578",
+                            Id = "332f5b18-b874-456e-b201-8c8c8d27eec2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d9453074-45de-4412-b3df-8fc4fc0eb297",
+                            Id = "e66ab09e-32a0-45e8-8156-a0b47f525884",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -487,8 +490,8 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "2c5dbc5d-1290-4c89-a4c0-24cabd80849a",
-                            RoleId = "dccc022f-618e-402f-b97a-1bee4237e578"
+                            UserId = "966c93ba-fd7a-496d-9c98-fab695f12f63",
+                            RoleId = "332f5b18-b874-456e-b201-8c8c8d27eec2"
                         });
                 });
 

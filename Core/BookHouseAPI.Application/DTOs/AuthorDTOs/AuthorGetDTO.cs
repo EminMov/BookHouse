@@ -16,6 +16,6 @@ namespace BookHouseAPI.Application.DTOs.AuthorDTOs
         public string Country { get; set; }
         public string Biography { get; set; }
         public int BooksCount { get; set; }
-        public ICollection<BookDTO> Books { get; set; }
+        public ICollection<BookGetDTO> Books { get; set; }
     }
 }

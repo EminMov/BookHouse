@@ -9,7 +9,7 @@ namespace BookHouseAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,User")]
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;
@@ -25,14 +25,14 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public async Task<IActionResult> AddReview([FromBody] ReviewAddDTO reviewAddDTO)
         {
             var result = await _reviewService.AddReviewAsync(reviewAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<IActionResult> UpdateReview([FromBody] ReviewUpdateDTO reviewUpdateDTO, int id)
         {
             var result = await _reviewService.UpdateReviewAsync(id, reviewUpdateDTO);

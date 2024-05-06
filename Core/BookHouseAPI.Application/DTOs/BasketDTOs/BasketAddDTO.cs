@@ -12,5 +12,6 @@ namespace BookHouseAPI.Application.DTOs.BasketDTOs
         public string UserId { get; set; }
         public int BookId { get; set; }
         public int Quantity { get; set; }
+        //public int OrderID { get; set; }
     }
 }

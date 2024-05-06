@@ -11,13 +11,13 @@ namespace BookHouseAPI.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
-        public AuthorController(IAuthorService authorService) 
-        { 
+        public AuthorController(IAuthorService authorService)
+        {
             _authorService = authorService;
         }
 
         [HttpGet]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetAllAuthors()
         {
             var result = await _authorService.GetAllAuthorsAsync();
@@ -26,23 +26,23 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpGet("get-by-id")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetAuthorById([FromQuery] int id)
         {
             var result = await _authorService.AuthorGetByIDAsync(id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("add")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorAddDTO authorAddDTO)
         {
             var result = await _authorService.AuthorAddAsync(authorAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("update")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAuthor([FromBody] AuthorUpdateDTO authorUpdateDTO, int id) 
         {
             var result = await _authorService.AuthorUpdateAsync(authorUpdateDTO, id);
@@ -50,7 +50,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAuthor([FromQuery] int id) 
         { 
             var result = await _authorService.AuthorDeleteAsync(id);

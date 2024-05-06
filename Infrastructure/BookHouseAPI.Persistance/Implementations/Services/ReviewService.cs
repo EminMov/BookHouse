@@ -34,6 +34,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 response.Message = "Book not found";
             }
 
+            review.User.Id = reviewAdd.UserId;
             review.Title = reviewAdd.Title;
             review.Comment = reviewAdd.Comment;
             review.DateCreated = DateTime.Now;

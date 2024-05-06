@@ -17,8 +17,8 @@ namespace BookHouseAPI.Controllers
             _genreService = genreService;
         }
 
-        [HttpGet("get")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetAllGenres()
         {
             var result = await _genreService.GetAllGenres();
@@ -26,24 +26,24 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("get/{id}")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [HttpGet("by-id")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetGenreById([FromQuery] int id)
         {
             var result = await _genreService.GenreGetByID(id);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("add")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddBook([FromBody] GenreDTO genreAddDTO)
         {
             var result = await _genreService.GenreAdd(genreAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("update")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateGenre([FromBody] GenreDTO genreUpdateDTO, int id)
         {
             var result = await _genreService.GenreUpdate(genreUpdateDTO, id);
@@ -51,7 +51,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteGenre([FromQuery] int id)
         {
             var result = await _genreService.GenreDelete(id);

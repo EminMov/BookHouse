@@ -38,6 +38,11 @@ namespace BookHouseAPI.Persistance.Contexts
                 .WithOne(b => b.Book)
                 .HasForeignKey(b => b.BookID);
 
+            //modelBuilder.Entity<Basket>()
+            //    .HasOne(b => b.Order)
+            //    .WithOne(o => o.Basket)
+            //    .HasForeignKey<Order>(o => o.BasketId);
+
             base.OnModelCreating(modelBuilder);
 
             var guidAdmin = Guid.NewGuid().ToString();

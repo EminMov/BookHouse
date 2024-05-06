@@ -24,6 +24,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
 using BookHouseAPI.Persistance.Implementations.Services;
+using FluentValidation.AspNetCore;
+using BookHouseAPI.Infrastructure.Filters;
+using BookHouseAPI.Application.DTOs.AuthorDTOs;
+using BookHouseAPI.Application.Validators.AuthorValidator;
 
 namespace BookHouseAPI
 {
@@ -122,9 +126,13 @@ namespace BookHouseAPI
                 });
             });
 
+            builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+                .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<AuthorAddDTOValidator>())
+                .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
+
             Logger? log = new LoggerConfiguration()
                 .WriteTo.Console(Serilog.Events.LogEventLevel.Error)
-                .WriteTo.File("Logs/myJsonLogs.json")//date-time
+                .WriteTo.File("Logs/myJsonLogs.json")//date-time mellim burda demishiki date-time tutsun
                 .WriteTo.File("Logs/mylogs.txt")
                 .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sinkOptions:
                 new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
@@ -138,7 +146,8 @@ namespace BookHouseAPI
                 {
                     AdditionalColumns = new Collection<SqlColumn>
                     {
-                        new SqlColumn(columnName:"User_Name",SqlDbType.NVarChar)
+                        new SqlColumn(columnName:"User_Name",SqlDbType.NVarChar),
+                        new SqlColumn(columnName:"Date",SqlDbType.NVarChar)
                     }
                 },
                 null, null
@@ -147,9 +156,13 @@ namespace BookHouseAPI
                 .MinimumLevel.Information()
                 .CreateLogger();
 
+            LogContext.PushProperty("Date", DateTime.UtcNow.ToString());
+
             Log.Logger = log;
 
             builder.Host.UseSerilog(log);
+
+            
 
             var app = builder.Build();
 

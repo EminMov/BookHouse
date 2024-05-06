@@ -43,12 +43,17 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 return response;
             }
 
-            basket.Items.Add(book);
-            basket.User.Id = basketAdd.UserId;
+            List<Book> books = new();
+            books.Add(book);
+
+            //sen bayaq hansi id elave elemey calisirdin men deysidim? userId, bookId, bookCount, amma xetani order ile relationda verirdi de
+            basket.Items = books;
+            basket.UserId = basketAdd.UserId;
             basket.TotalItems += basket.Items.Count;
             basket.BookId = basketAdd.BookId;
             basket.TotalPrice += book.Price * basket.Items.Count;
             basket.ModifyTime = DateTime.Now;
+            //basket.OrderID = basketAdd.OrderID;
 
             var addedBasketItem = await _unitOfWork.GetRepository<Basket>().AddAsync(basket);
             var savedData = await _unitOfWork.SaveChangesAsync();
@@ -79,6 +84,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 var userBasket = await _unitOfWork.GetRepository<Basket>()
                                                   .GetAll()
                                                   .Include(b => b.Items)
+                                                  .Include(b => b.Order)
                                                   .FirstOrDefaultAsync(b => b.User.Id == userId);
 
                 if (userBasket == null)
@@ -92,13 +98,11 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 // Создаем объект BasketDTO на основе полученной корзины
                 var basketDTO = new BasketGetDTO
                 {
-                    User = userBasket.User,
                     Items = userBasket.Items.ToList(),
                     TotalItems = userBasket.TotalItems,
                     TotalPrice = userBasket.TotalPrice,
                     ModifyTime = userBasket.ModifyTime,
-                    Order = userBasket.Order,
-                    OrderID = userBasket.OrderID
+                    OrderID = userBasket.OrderID 
                 };
 
                 response.Success = true;

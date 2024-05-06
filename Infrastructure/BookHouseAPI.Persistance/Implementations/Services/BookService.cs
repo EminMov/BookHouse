@@ -4,6 +4,7 @@ using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.BookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
 using BookHouseAPI.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookHouseAPI.Persistance.Implementetions.Services
 {
@@ -17,14 +18,25 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             _mapper = mapper;
         }
 
-        public async Task<ResponseModel<bool>> BookDelete(int Id)
+        public async Task<ResponseModel<bool>> BookDelete(int bookId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            var data = await _unitOfWork.GetRepository<Book>().GetByIdAsync(Id);
+            var data = await _unitOfWork.GetRepository<Book>().GetByIdAsync(bookId);
             var result = _unitOfWork.GetRepository<Book>().Remove(data);
-            var rawAffected = await _unitOfWork.SaveChangesAsync();
 
-            if (rawAffected > 0)
+            var authorBooks = await _unitOfWork.GetRepository<Author>()
+                                              .GetAll()
+                                              .Where(o => o.Books.Contains(data))
+                                              .ToListAsync();
+
+            foreach (var authorBook in authorBooks)
+            {
+                authorBook.BooksCount -= 1;
+            }
+
+            var rowAffected = await _unitOfWork.SaveChangesAsync();
+
+            if (rowAffected > 0)
             {
                 response.Success = true;
                 response.StatusCode = 200;
@@ -41,13 +53,13 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<BookDTO>> BookGetByID(int Id)
+        public async Task<ResponseModel<BookGetDTO>> BookGetByID(int Id)
         {
-            ResponseModel<BookDTO> response = new ResponseModel<BookDTO>();
+            ResponseModel<BookGetDTO> response = new ResponseModel<BookGetDTO>();
             var data = await _unitOfWork.GetRepository<Book>().GetByIdAsync(Id);
             if (data != null)
             {
-                var get = _mapper.Map<BookDTO>(data);
+                var get = _mapper.Map<BookGetDTO>(data);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.Data = get;
@@ -102,13 +114,13 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             return response;
         }
 
-        public async Task<ResponseModel<List<BookDTO>>> GetAllBooks()
+        public async Task<ResponseModel<List<BookGetDTO>>> GetAllBooks()
         {
-            ResponseModel<List<BookDTO>> response = new ResponseModel<List<BookDTO>>();
+            ResponseModel<List<BookGetDTO>> response = new ResponseModel<List<BookGetDTO>>();
             var data = _unitOfWork.GetRepository<Book>().GetAll();
             if (data != null)
             {
-                var get = _mapper.Map<List<BookDTO>>(data);
+                var get = _mapper.Map<List<BookGetDTO>>(data);
                 response.Data = get;
                 response.Success = true;
                 response.StatusCode = 200;

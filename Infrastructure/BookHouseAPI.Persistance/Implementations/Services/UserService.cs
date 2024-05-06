@@ -129,7 +129,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync("Error: Delet User Asyn");
+                await Console.Out.WriteLineAsync("Error: Delete User Async");
                 Log.Error(ex.Message + ex.InnerException);
                 return resModel;
             }
@@ -284,7 +284,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync("Error: Update User Asyn");
+                await Console.Out.WriteLineAsync("Error: Update User Async");
                 Log.Error(ex.Message + ex.InnerException);
                 return resModel;
             }

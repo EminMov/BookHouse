@@ -5,6 +5,7 @@ using BookHouseAPI.Persistance.Implementetions.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace BookHouseAPI.Controllers
 {
@@ -18,24 +19,26 @@ namespace BookHouseAPI.Controllers
             _basketService = basketService;
         }
 
-        [HttpGet("get")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetBasketByUser([FromQuery] string id)
         {
+            Log.Error("Error in GetById method");//bu zaten default yazir tarixi
             var result = await _basketService.GetAllBasketAsync(id);
             return StatusCode(result.StatusCode, result);
         }
 
         [HttpPost("add-to-basket")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> AddToBasket([FromBody] BasketAddDTO basketAddDTO)
         {
+            
             var result = await _basketService.AddToBasketAsync(basketAddDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("update")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [HttpPut]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> UpdateBasket([FromBody] BasketUpdateDTO basketUpdateDTO, int id)
         {
             var result = await _basketService.UpdateBasketAsync(basketUpdateDTO, id);
@@ -43,7 +46,7 @@ namespace BookHouseAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        //[Authorize(AuthenticationSchemes = "Admin", Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> RemoveFromBasket([FromQuery] string userId, int bookId)
         {
             var result = await _basketService.RemoveFromBasketAsync(userId, bookId);
