@@ -14,5 +14,6 @@ namespace BookHouseAPI.Application.DTOs.BookDTOs
         public string Title { get; set; }
         public string ISBN { get; set; }
         public int GenreId { get; set; }
+        public double Price { get; set; }
     }
 }

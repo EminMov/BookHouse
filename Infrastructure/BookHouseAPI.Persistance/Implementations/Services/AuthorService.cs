@@ -45,7 +45,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
         public async Task<ResponseModel<AuthorGetDTO>> AuthorGetByIDAsync(int Id)
         {
             ResponseModel<AuthorGetDTO> response = new ResponseModel<AuthorGetDTO>();
-            var data = await _unitOfWork.GetRepository<Author>().Table.Include(x => x.Books).FirstOrDefaultAsync(x => x.Id == Id);
+            var data = await _unitOfWork.GetRepository<Author>()
+                .GetByIdAsync(Id, x => x.Books);
 
             if(data != null)
             {

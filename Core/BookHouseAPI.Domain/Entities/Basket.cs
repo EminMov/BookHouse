@@ -16,7 +16,7 @@ namespace BookHouseAPI.Domain.Entities
         public int TotalItems { get; set; }
         public double TotalPrice { get; set; }
         public DateTime ModifyTime { get; set; }
-        public Order Order { get; set; }
-        public int OrderID { get; set; }
+        //public Order Order { get; set; }
+        //public int OrderID { get; set; }
     }
 }

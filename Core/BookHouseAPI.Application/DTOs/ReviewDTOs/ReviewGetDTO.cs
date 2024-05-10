@@ -8,6 +8,7 @@ namespace BookHouseAPI.Application.DTOs.ReviewDTOs
 {
     public class ReviewGetDTO
     {
+        public int Id { get; set; }
         public int Grade { get; set; }
         public string Comment { get; set; }
         public string Title { get; set; }

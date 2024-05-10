@@ -104,10 +104,10 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2c5dbc5d-1290-4c89-a4c0-24cabd80849a",
+                            Id = "ea28cd8e-878f-469b-bb5e-164ca262e9c3",
                             AccessFailedCount = 0,
-                            BirthDate = new DateTime(2024, 4, 11, 21, 14, 19, 505, DateTimeKind.Utc).AddTicks(8072),
-                            ConcurrencyStamp = "3ce40980-ee0e-4362-a542-b3690879e5d2",
+                            BirthDate = new DateTime(2024, 5, 10, 17, 53, 52, 60, DateTimeKind.Utc).AddTicks(9634),
+                            ConcurrencyStamp = "9be412cb-8fd2-447f-9d1b-08f3b05b02ea",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FirstName = "default",
@@ -115,9 +115,9 @@ namespace BookHouseAPI.Persistance.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELOjqWF6DN2Gw3doGgMz+wPkqROA5nP9yMoRXhLOiUZg+u32BSosYRr69N4snvrcvg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMVqnzW8ZZcvgflwu5K1QRArXssKY+zuOXQLQtiin31XJbWeuFmcpSqG8d06G9yqwQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e0487500-1a82-415c-a435-02c722160796",
+                            SecurityStamp = "d19b8a09-a2bb-4aad-a4f0-33a29cd25354",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -152,13 +152,13 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dccc022f-618e-402f-b97a-1bee4237e578",
+                            Id = "59dc5c94-be32-453d-b3e3-2b6f169ff0c5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d9453074-45de-4412-b3df-8fc4fc0eb297",
+                            Id = "0a6b479c-1d03-4839-ba32-5b4d3a082a79",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -189,7 +189,7 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Basket", b =>
@@ -206,9 +206,6 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Property<DateTime>("ModifyTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalItems")
                         .HasColumnType("int");
 
@@ -222,7 +219,7 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Baskets");
+                    b.ToTable("Baskets", (string)null);
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Book", b =>
@@ -276,7 +273,7 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Genre", b =>
@@ -295,7 +292,7 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>
@@ -320,12 +317,11 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BasketId")
-                        .IsUnique();
+                    b.HasIndex("BasketId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Review", b =>
@@ -360,7 +356,7 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -487,8 +483,8 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "2c5dbc5d-1290-4c89-a4c0-24cabd80849a",
-                            RoleId = "dccc022f-618e-402f-b97a-1bee4237e578"
+                            UserId = "ea28cd8e-878f-469b-bb5e-164ca262e9c3",
+                            RoleId = "59dc5c94-be32-453d-b3e3-2b6f169ff0c5"
                         });
                 });
 
@@ -531,8 +527,8 @@ namespace BookHouseAPI.Persistance.Migrations
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>
                 {
                     b.HasOne("BookHouseAPI.Domain.Entities.Basket", "Basket")
-                        .WithOne("Order")
-                        .HasForeignKey("BookHouseAPI.Domain.Entities.Order", "BasketId")
+                        .WithMany()
+                        .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -628,8 +624,6 @@ namespace BookHouseAPI.Persistance.Migrations
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Basket", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Book", b =>

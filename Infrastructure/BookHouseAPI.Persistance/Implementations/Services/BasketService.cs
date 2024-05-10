@@ -46,7 +46,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             List<Book> books = new();
             books.Add(book);
 
-            //sen bayaq hansi id elave elemey calisirdin men deysidim? userId, bookId, bookCount, amma xetani order ile relationda verirdi de
+            
             basket.Items = books;
             basket.UserId = basketAdd.UserId;
             basket.TotalItems += basket.Items.Count;
@@ -84,7 +84,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 var userBasket = await _unitOfWork.GetRepository<Basket>()
                                                   .GetAll()
                                                   .Include(b => b.Items)
-                                                  .Include(b => b.Order)
+                                                  //.Include(b => b.Order)
                                                   .FirstOrDefaultAsync(b => b.User.Id == userId);
 
                 if (userBasket == null)
@@ -102,7 +102,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     TotalItems = userBasket.TotalItems,
                     TotalPrice = userBasket.TotalPrice,
                     ModifyTime = userBasket.ModifyTime,
-                    OrderID = userBasket.OrderID 
+                    //OrderID = userBasket.OrderID 
                 };
 
                 response.Success = true;

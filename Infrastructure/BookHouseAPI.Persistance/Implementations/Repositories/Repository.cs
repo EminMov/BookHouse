@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,9 +33,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Repositories
             return query;
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id, Expression<Func<T, object>> includeFilter = null)
         {
-            var data = await Table.FirstOrDefaultAsync(d => d.Id == id);
+            IQueryable<T> query = Table;
+
+            if (includeFilter != null)
+            {
+                query = query.Include(includeFilter);
+            }
+
+            var data = await query.FirstOrDefaultAsync(d => d.Id == id);
             return data;
         }
 

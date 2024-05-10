@@ -53,13 +53,14 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 order.Basket = userBasket;
                 order.Basket.Id = userBasket.Id;
 
+
                 // Очищаем корзину после создания заказа
-                userBasket.Items.Clear();
-                userBasket.TotalItems = 0;
-                userBasket.TotalPrice = 0;
-                userBasket.ModifyTime = DateTime.Now;
-                userBasket.Order = order;
-                userBasket.Order.Id = order.Id;
+                //userBasket.Items.Clear();
+                //userBasket.TotalItems = 0;
+                //userBasket.TotalPrice = 0;
+                //userBasket.ModifyTime = DateTime.Now;
+                //userBasket.Order = order;
+                //userBasket.Order.Id = order.Id;
 
                 var addedOrder = await _unitOfWork.GetRepository<Order>().AddAsync(order);
                 await _unitOfWork.SaveChangesAsync();

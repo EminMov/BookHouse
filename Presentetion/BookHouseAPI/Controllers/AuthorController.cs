@@ -51,7 +51,7 @@ namespace BookHouseAPI.Controllers
 
         [HttpDelete("delete/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteAuthor([FromQuery] int id) 
+        public async Task<IActionResult> DeleteAuthor([FromRoute] int id) 
         { 
             var result = await _authorService.AuthorDeleteAsync(id);
             return StatusCode(result.StatusCode, result);

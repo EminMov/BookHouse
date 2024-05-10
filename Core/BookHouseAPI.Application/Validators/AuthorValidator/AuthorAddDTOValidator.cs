@@ -14,22 +14,25 @@ namespace BookHouseAPI.Application.Validators.AuthorValidator
         public AuthorAddDTOValidator() 
         {
             RuleFor(author => author.FirstName)
-                .NotEmpty().WithMessage("First name is required")
+                .NotNull().NotEmpty().WithMessage("First name is required")
                 .MaximumLength(50).WithMessage("First name cannot be longer than 50 characters");
 
             RuleFor(author => author.LastName)
-                .NotEmpty().WithMessage("Last name is required")
+                .NotNull().NotEmpty().WithMessage("Last name is required")
                 .MaximumLength(50).WithMessage("Last name cannot be longer than 50 characters");
 
             RuleFor(author => author.Country)
-                .NotEmpty().WithMessage("Country is required")
+                .NotNull().NotEmpty().WithMessage("Country is required")
                 .MaximumLength(100).WithMessage("Country cannot be longer than 100 characters");
 
             RuleFor(author => author.Biography)
-                .MaximumLength(500).WithMessage("Biography cannot be longer than 500 characters");
+                .NotNull().MaximumLength(500).WithMessage("Biography cannot be longer than 500 characters");
 
-            RuleForEach(author => author.Books)
-                .SetValidator(new BookDTOValidator());
+            RuleFor(author => author.Books)
+                .NotNull().WithMessage("Books collection is required")
+                .NotEmpty().WithMessage("Books collection is required")
+                .ForEach(book => book.SetValidator(new BookDTOValidator()));
+
         }
     }
 }
