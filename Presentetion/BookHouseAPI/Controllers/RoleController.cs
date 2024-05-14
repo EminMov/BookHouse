@@ -36,8 +36,8 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("get-by-id")]
-        public async Task<IActionResult> GetRoleById(string id)
+        [HttpGet("/api/Role/{id}")]
+        public async Task<IActionResult> GetRoleById([FromRoute]string id)
         {
             var result = await _roleService.GetRoleByIdAsync(id);
             return StatusCode(result.StatusCode, result);

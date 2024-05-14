@@ -28,7 +28,7 @@ namespace BookHouseAPI.Controllers
 
         [HttpGet("/api/Book/{id}")]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> GetBookById([FromQuery] int id)
+        public async Task<IActionResult> GetBookById([FromRoute] int id)
         {
             var result = await _bookService.BookGetByID(id);
             return StatusCode(result.StatusCode, result);

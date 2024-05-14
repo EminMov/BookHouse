@@ -25,9 +25,9 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("get-by-id")]
+        [HttpGet("/api/Author/{id}")]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> GetAuthorById([FromQuery] int id)
+        public async Task<IActionResult> GetAuthorById([FromRoute] int id)
         {
             var result = await _authorService.AuthorGetByIDAsync(id);
             return StatusCode(result.StatusCode, result);
