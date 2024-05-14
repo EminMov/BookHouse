@@ -49,7 +49,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("/api/Author/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAuthor([FromRoute] int id) 
         { 

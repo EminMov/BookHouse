@@ -45,7 +45,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("api/Basket/{id}")]
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> RemoveFromBasket([FromQuery] string userId, int bookId)
         {

@@ -50,7 +50,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("/api/Genre/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteGenre([FromQuery] int id)
         {
