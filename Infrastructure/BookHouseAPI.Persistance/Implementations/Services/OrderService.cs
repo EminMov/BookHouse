@@ -29,6 +29,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             var response = new ResponseModel<OrderAddDTO>();
             Order order = new Order();
 
+
             try
             {
                 var userBasket = await _unitOfWork.GetRepository<Basket>()
@@ -47,13 +48,21 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
                 order.TotalPrice = userBasket.TotalPrice;
                 order.Created = DateTime.Now;
-                order.User = userBasket.User;
-
+                order.UserId = userBasket.UserId;
                 // Переносим элементы корзины в заказ
                 order.Basket = userBasket;
-                order.Basket.Id = userBasket.Id;
+                order.BasketId = userBasket.Id;
 
+                //foreach(var item in userBasket.Items)
+                //{
+                //    OrderItem orderItem = new OrderItem();
+                //    orderItem.Price = item.Price;
+                //    orderItem.Title = item.Title;
+                //    orderItem.OrderId = order.Id;
+                //    await _unitOfWork.GetRepository<OrderItem>().AddAsync(orderItem);
+                //}
 
+                
                 // Очищаем корзину после создания заказа
                 //userBasket.Items.Clear();
                 //userBasket.TotalItems = 0;
@@ -64,6 +73,25 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
                 var addedOrder = await _unitOfWork.GetRepository<Order>().AddAsync(order);
                 await _unitOfWork.SaveChangesAsync();
+                //var newOrder = _unitOfWork.GetRepository<Order>().GetAll().FirstOrDefaultAsync();
+                foreach (var item in userBasket.Items)
+                {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.Price = item.Price;
+                    orderItem.Title = item.Title;
+                    orderItem.OrderId = order.Id;
+                    await _unitOfWork.GetRepository<OrderItem>().AddAsync(orderItem);
+                }
+                await _unitOfWork.SaveChangesAsync();
+                //Очищаем корзину после создания заказа
+                userBasket.Items.Clear();
+                userBasket.TotalItems = 0;
+                userBasket.TotalPrice = 0;
+                userBasket.ModifyTime = DateTime.Now;
+                //userBasket.Order = order;
+                //userBasket.Order.Id = order.Id;
+
+                await _unitOfWork.SaveChangesAsync();
 
                 response.Success = true;
                 response.StatusCode = 200;
@@ -72,9 +100,10 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
 
                 return response;
             }
+
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync("Error: Create User Async");
+                await Console.Out.WriteLineAsync("Error: Create Order Async");
                 Log.Error(ex.Message + ex.InnerException);
                 return response;
             }
@@ -88,6 +117,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 var orders = await _unitOfWork.GetRepository<Order>()
                                               .GetAll()
+                                              .Include(x => x.User)
+                                              .Include(x => x.Basket)
                                               .Where(o => o.User.Id == userId)
                                               .ToListAsync();
 
@@ -97,8 +128,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     UserId = order.User.Id,
                     TotalPrice = order.TotalPrice,
                     Created = order.Created
-                    // тут есть проблема, не могу передать детали заказа, такие как количество книг, какие именно книги  
-
                 }).ToList();
 
                 response.Success = true;

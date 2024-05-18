@@ -16,5 +16,7 @@ namespace BookHouseAPI.Domain.Entities
         public Author Author { get; set; }
         public Genre Genre { get; set; }
         public ICollection<Review> Reviews { get; set; }
+        public ICollection<Order> Orders { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }

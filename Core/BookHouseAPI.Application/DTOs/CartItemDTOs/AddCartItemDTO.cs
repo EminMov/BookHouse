@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookHouseAPI.Domain.Entities
+namespace BookHouseAPI.Application.DTOs.ShopCartItemDTOs
 {
-    public class ShopCartItem
+    public class AddCartItemDTO
     {
-        public int CartItemId { get; set; }
         public int BookId { get; set; }
-        public Book Book { get; set; }
         public int Quantity { get; set; }
     }
 }

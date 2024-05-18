@@ -42,7 +42,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            tokenDTO.Expiration = DateTime.UtcNow.AddMinutes(5);
+            tokenDTO.Expiration = DateTime.UtcNow.AddMinutes(30);
             JwtSecurityToken securityToken = new JwtSecurityToken(
                 audience: _configuration["Token:Audience"],
                 issuer: _configuration["Token:Issuer"],
