@@ -4,6 +4,7 @@ using BookHouseAPI.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookHouseAPI.Persistance.Migrations
 {
     [DbContext(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20240516200655_migration-for-busket")]
+    partial class migrationforbusket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,10 +107,10 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "280d6196-adda-4db3-810a-70c059553b00",
+                            Id = "18e73173-46de-46f3-a774-85d5e1813d1a",
                             AccessFailedCount = 0,
-                            BirthDate = new DateTime(2024, 5, 18, 11, 9, 17, 836, DateTimeKind.Utc).AddTicks(6948),
-                            ConcurrencyStamp = "39976ba4-d013-495f-8d14-3b6b332d5f28",
+                            BirthDate = new DateTime(2024, 5, 16, 20, 6, 55, 92, DateTimeKind.Utc).AddTicks(3126),
+                            ConcurrencyStamp = "832e4366-0780-4d24-a11b-dacce40bc60d",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FirstName = "default",
@@ -115,9 +118,9 @@ namespace BookHouseAPI.Persistance.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGPfNyuFgl3Kzs/mnPtPSCEpFkuP0B0u4n3BN8VdGrWXcK5SR/d+/W/wa5YqldQoxw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFv35i//Pkj0rxDA74hCTPdTWZRMIQ9J47Jlj4pp/otUzscS7FP/fOVrMm3pD1id+w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "746984ad-59d8-4df7-929c-61a7fe0cfbe1",
+                            SecurityStamp = "0e82f62f-2fbb-49f6-be64-b22dade08e89",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -152,13 +155,13 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "63d6694e-6bc6-4f87-8ec0-5bcc3dd3976b",
+                            Id = "0c397958-2476-4422-901a-e730c18d242b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9d9a4122-8bad-4aad-b1e1-5bce6253c79f",
+                            Id = "a4066c94-ef86-44ea-aec1-54cd6fd924aa",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -248,6 +251,9 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Property<string>("ISBN")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderNewId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -273,7 +279,65 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasIndex("GenreId");
 
+                    b.HasIndex("OrderNewId");
+
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Genre", b =>
@@ -329,33 +393,28 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderNew", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("UserID")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderNews");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Review", b =>
@@ -517,8 +576,8 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "280d6196-adda-4db3-810a-70c059553b00",
-                            RoleId = "63d6694e-6bc6-4f87-8ec0-5bcc3dd3976b"
+                            UserId = "18e73173-46de-46f3-a774-85d5e1813d1a",
+                            RoleId = "0c397958-2476-4422-901a-e730c18d242b"
                         });
                 });
 
@@ -553,9 +612,41 @@ namespace BookHouseAPI.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BookHouseAPI.Domain.Entities.OrderNew", null)
+                        .WithMany("Books")
+                        .HasForeignKey("OrderNewId");
+
                     b.Navigation("Author");
 
                     b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Cart", b =>
+                {
+                    b.HasOne("BookHouseAPI.Domain.Entities.AppUser", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.CartItem", b =>
+                {
+                    b.HasOne("BookHouseAPI.Domain.Entities.Book", "Book")
+                        .WithMany("CartItems")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookHouseAPI.Domain.Entities.Cart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>
@@ -579,21 +670,21 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderNew", b =>
                 {
-                    b.HasOne("BookHouseAPI.Domain.Entities.Book", "Book")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("BookId");
+                    b.HasOne("BookHouseAPI.Domain.Entities.AppUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
 
-                    b.HasOne("BookHouseAPI.Domain.Entities.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
+                    b.HasOne("BookHouseAPI.Domain.Entities.Cart", "Cart")
+                        .WithOne("OrderNew")
+                        .HasForeignKey("BookHouseAPI.Domain.Entities.OrderNew", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Book");
+                    b.Navigation("Cart");
 
-                    b.Navigation("Order");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Review", b =>
@@ -668,6 +759,8 @@ namespace BookHouseAPI.Persistance.Migrations
                 {
                     b.Navigation("Books");
 
+                    b.Navigation("Carts");
+
                     b.Navigation("Orders");
                 });
 
@@ -683,11 +776,18 @@ namespace BookHouseAPI.Persistance.Migrations
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Book", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("CartItems");
 
                     b.Navigation("Orders");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Cart", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("OrderNew");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Genre", b =>
@@ -695,9 +795,9 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderNew", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

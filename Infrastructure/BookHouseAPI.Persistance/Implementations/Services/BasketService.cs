@@ -102,7 +102,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     TotalItems = userBasket.TotalItems,
                     TotalPrice = userBasket.TotalPrice,
                     ModifyTime = userBasket.ModifyTime,
-                    //OrderID = userBasket.OrderID 
                 };
 
                 response.Success = true;

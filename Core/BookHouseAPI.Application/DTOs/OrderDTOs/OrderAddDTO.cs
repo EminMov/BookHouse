@@ -9,7 +9,5 @@ namespace BookHouseAPI.Application.DTOs.OrderDTOs
     public class OrderAddDTO
     {
         public string UserId { get; set; }
-        public double TotalPrice { get; set; }
-        public DateTime Created { get; set; }
     }
 }

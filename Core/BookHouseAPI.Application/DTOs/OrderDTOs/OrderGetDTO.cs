@@ -13,6 +13,6 @@ namespace BookHouseAPI.Application.DTOs.OrderDTOs
         public string UserName { get; set; }
         public DateTime Created { get; set; }
         public double TotalPrice { get; set; }
-        public List<BasketGetDTO> Basket { get; set; }
+        public BasketGetDTO Basket { get; set; }
     }
 }

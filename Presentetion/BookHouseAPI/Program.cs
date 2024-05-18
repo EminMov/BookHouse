@@ -28,6 +28,8 @@ using FluentValidation.AspNetCore;
 using BookHouseAPI.Infrastructure.Filters;
 using BookHouseAPI.Application.DTOs.AuthorDTOs;
 using BookHouseAPI.Application.Validators.AuthorValidator;
+using BookHouseAPI.Persistance.Implementations.Repositories;
+using BookHouseAPI.Persistance.Implementations.UnitOfWorks;
 
 namespace BookHouseAPI
 {
@@ -63,8 +65,12 @@ namespace BookHouseAPI
             builder.Services.AddScoped<ITokenHandler, Persistance.Implementetions.Services.TokenHandler>();
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped(typeof(IRepositoryCart<>), typeof(RepositoryCart<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWorkCart, UnitOfWorkCart>();
             builder.Services.AddHttpContextAccessor();
+
+            //builder.Services.AddMediatR();
 
             builder.Services.AddAuthentication(options =>
             {

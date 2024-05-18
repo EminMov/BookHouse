@@ -20,6 +20,7 @@ namespace BookHouseAPI.Persistance.Contexts
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,11 @@ namespace BookHouseAPI.Persistance.Contexts
                 .HasMany(a => a.Reviews)
                 .WithOne(b => b.Book)
                 .HasForeignKey(b => b.BookID);
+
+            modelBuilder.Entity<Book>()
+                .HasMany(a => a.OrderItems)
+                .WithOne(b => b.Book)
+                .HasForeignKey(b => b.BookId);
 
             //modelBuilder.Entity<Basket>()
             //    .HasOne(b => b.Order)
