@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookHouseAPI.Application.Abstractions.IUnitOfWork;
 using BookHouseAPI.Application.Abstractions.Services;
+using BookHouseAPI.Application.DTOs.AuthorDTOs;
 using BookHouseAPI.Application.DTOs.OrderDTOs;
 using BookHouseAPI.Application.DTOs.ReturnBookDTOs;
 using BookHouseAPI.Application.Models.ResponseModels;
@@ -49,7 +50,6 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 order.TotalPrice = userBasket.TotalPrice;
                 order.Created = DateTime.Now;
                 order.UserId = userBasket.UserId;
-                // Переносим элементы корзины в заказ
                 order.Basket = userBasket;
                 order.BasketId = userBasket.Id;
 
@@ -92,7 +92,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 userBasket.TotalItems = 0;
                 userBasket.TotalPrice = 0;
                 userBasket.ModifyTime = DateTime.Now;
-
+                _unitOfWork.GetRepository<Basket>().Update(userBasket);
+                //await _unitOfWork.GetRepository<Basket>().RemoveById(userBasket.Id);
                 await _unitOfWork.SaveChangesAsync();
 
                 response.Success = true;
@@ -111,6 +112,23 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
+        public async Task<ResponseModel<List<OrderItemGetDTO>>> GetOrderItemsByOrderId(int id)
+        {
+            var response = new ResponseModel<List<OrderItemGetDTO>>();
+            var orderItems = await _unitOfWork.GetRepository<OrderItem>()
+                                              .GetAll()
+                                              .Where(x => x.OrderId == id)
+                                              .ToListAsync();
+            var get = _mapper.Map<List<OrderItemGetDTO>>(orderItems);
+
+            response.Success = true;
+            response.StatusCode = 200;
+            response.Message = "Order details";
+            response.Data = get;
+
+            return response;
+        }
+
         public async Task<ResponseModel<List<OrderGetDTO>>> GetOrdersByUserIdAsync(string userId)
         {
             var response = new ResponseModel<List<OrderGetDTO>>();
@@ -124,13 +142,17 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                                               .Where(o => o.User.Id == userId)
                                               .ToListAsync();
 
+
                 var ordersDTO = orders.Select(order => new OrderGetDTO
                 {
+                    OrderId = order.Id,
                     UserName = order.User.FirstName,
                     UserId = order.User.Id,
                     TotalPrice = order.TotalPrice,
-                    Created = order.Created
+                    Created = order.Created,
                 }).ToList();
+
+
 
                 response.Success = true;
                 response.StatusCode = 200;

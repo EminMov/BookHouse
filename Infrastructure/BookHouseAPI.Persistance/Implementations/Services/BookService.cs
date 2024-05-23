@@ -161,7 +161,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 Description = book.Description,
                 Rating = book.Rating,
                 Price = book.Price,
-                SalesCount = book.SalesCount 
+                SalesCount = book.SalesCount,
+                GenreId = book.GenreId,
             };
 
             return new ResponseModel<BookMostSoldDTO>

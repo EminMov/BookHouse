@@ -25,6 +25,14 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("get-order-details-by-order-id")]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetOrderDetails([FromQuery] int orderId)
+        {
+            var result = await _orderService.GetOrderItemsByOrderId(orderId);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpPost("create-order")]
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> CreateOrderAsync([FromBody] OrderAddDTO orderDTO)
@@ -33,12 +41,12 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPut("return-book")]
-        [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> ReturnBookAsync([FromBody] ReturnBookDTO returnBookDTO)
-        {
-            var result = await _orderService.ReturnBookAsync(returnBookDTO);
-            return StatusCode(result.StatusCode, result);
-        }
+        //[HttpPut("return-book")]
+        //[Authorize(Roles = "Admin,User")]
+        //public async Task<IActionResult> ReturnBookAsync([FromBody] ReturnBookDTO returnBookDTO)
+        //{
+        //    var result = await _orderService.ReturnBookAsync(returnBookDTO);
+        //    return StatusCode(result.StatusCode, result);
+        //}
     }
 }

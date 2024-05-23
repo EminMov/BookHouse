@@ -13,7 +13,7 @@ namespace BookHouseAPI.Application.Abstractions.IRepositories
     {
         DbSet<T> Table { get; }
         IQueryable<T> GetAll();
-        Task<T> GetByIdAsync(int id, Expression<Func<T, object>> includeFilter = null);   
+        Task<T> GetByIdAsync(int id, Expression<Func<T, object>> includeFilter = null);
         Task<bool> AddAsync(T data);
         bool Remove(T data);
         Task<bool> RemoveById(int id);

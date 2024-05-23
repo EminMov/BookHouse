@@ -13,7 +13,7 @@ namespace BookHouseAPI.Application.Abstractions.Services
     {
         public Task<ResponseModel<BasketAddDTO>> AddToBasketAsync(BasketAddDTO basketDTO);
         public Task<ResponseModel<bool>> RemoveFromBasketAsync(string userId, int bookId);
-        public Task<ResponseModel<bool>> UpdateBasketAsync(BasketUpdateDTO basketUpdate, int Id);
+        public Task<ResponseModel<bool>> UpdateBasketAsync(BasketUpdateDTO basketUpdate);
         public Task<ResponseModel<BasketGetDTO>> GetAllBasketAsync(string userId);
     }
 }

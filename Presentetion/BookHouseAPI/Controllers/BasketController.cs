@@ -21,10 +21,10 @@ namespace BookHouseAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> GetBasketByUser([FromQuery] string id)
+        public async Task<IActionResult> GetBasketByUser([FromQuery] string UserId)
         {
             Log.Error("Error in GetById method");//bu zaten default yazir tarixi
-            var result = await _basketService.GetAllBasketAsync(id);
+            var result = await _basketService.GetAllBasketAsync(UserId);
             return StatusCode(result.StatusCode, result);
         }
 
@@ -39,13 +39,13 @@ namespace BookHouseAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> UpdateBasket([FromBody] BasketUpdateDTO basketUpdateDTO, int id)
+        public async Task<IActionResult> UpdateBasket([FromBody] BasketUpdateDTO basketUpdateDTO)
         {
-            var result = await _basketService.UpdateBasketAsync(basketUpdateDTO, id);
+            var result = await _basketService.UpdateBasketAsync(basketUpdateDTO);
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/api/Basket")]
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> RemoveFromBasket([FromQuery] string userId, int bookId)
         {

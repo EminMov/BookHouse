@@ -8,7 +8,6 @@ namespace BookHouseAPI.Domain.Entities
 {
     public class Basket : BaseEntity
     {
-        public int Id { get; set; }
         public AppUser User { get; set; } 
         public string UserId { get; set; } 
         public ICollection<Book> Items { get; set; }

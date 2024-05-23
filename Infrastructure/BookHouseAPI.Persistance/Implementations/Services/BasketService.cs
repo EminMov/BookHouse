@@ -53,9 +53,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             basket.BookId = basketAdd.BookId;
             basket.TotalPrice += book.Price * basket.Items.Count;
             basket.ModifyTime = DateTime.Now;
-            //basket.OrderID = basketAdd.OrderID;
 
-            var addedBasketItem = await _unitOfWork.GetRepository<Basket>().AddAsync(basket);
+            await _unitOfWork.GetRepository<Basket>().AddAsync(basket);
             var savedData = await _unitOfWork.SaveChangesAsync();
 
             if (savedData > 0) 
@@ -84,8 +83,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 var userBasket = await _unitOfWork.GetRepository<Basket>()
                                                   .GetAll()
                                                   .Include(b => b.Items)
-                                                  //.OrderByDescending<Basket, >(Basket)
-                                                  .FirstOrDefaultAsync(b => b.User.Id == userId);
+                                                  .Where(b => b.User.Id == userId)
+                                                  .FirstOrDefaultAsync();
 
                 if (userBasket == null)
                 {
@@ -96,6 +95,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 }
 
                 // Создаем объект BasketDTO на основе полученной корзины
+                //var basketDTO = _mapper.Map<List<BasketGetDTO>>(userBasket);
                 var basketDTO = new BasketGetDTO
                 {
                     Items = userBasket.Items.ToList(),
@@ -128,7 +128,8 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 var userBasket = await _unitOfWork.GetRepository<Basket>()
                                                   .GetAll()
                                                   .Include(b => b.Items)
-                                                  .FirstOrDefaultAsync(b => b.User.Id == userId);
+                                                  .Where(b => b.User.Id == userId)
+                                                  .FirstOrDefaultAsync();
 
                 if (userBasket == null)
                 {
@@ -143,15 +144,16 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 if (bookToRemove == null)
                 {
                     response.Success = false;
-                    response.StatusCode = 404; 
+                    response.StatusCode = 404;
                     response.Message = "Book not found in the basket";
                     return response;
                 }
 
-                userBasket.Items.Remove(bookToRemove);
-                userBasket.TotalItems -= 1; 
+                userBasket.TotalItems -= 1;
                 userBasket.TotalPrice -= bookToRemove.Price;
+                userBasket.Items.Remove(bookToRemove);
 
+                _unitOfWork.GetRepository<Basket>().Update(userBasket);
                 await _unitOfWork.SaveChangesAsync();
 
                 response.Success = true;
@@ -169,7 +171,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
         }
 
-        public async Task<ResponseModel<bool>> UpdateBasketAsync(BasketUpdateDTO basketUpdate, int Id)
+        public async Task<ResponseModel<bool>> UpdateBasketAsync(BasketUpdateDTO basketUpdate)
         {
             var response = new ResponseModel<bool>();
 
@@ -188,9 +190,22 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     return response;
                 }
 
-                userBasket.TotalItems = basketUpdate.TotalItems;
-                userBasket.TotalPrice = basketUpdate.TotalPrice;
+                var book = await _unitOfWork.GetRepository<Book>().GetByIdAsync(basketUpdate.BookId);
+                if (book == null)
+                {
+                    response.Success = false;
+                    response.StatusCode = 400;
+                    response.Message = "Book not found";
+                    return response;
+                }
+
+                
+                userBasket.Items.Add(book);
+                userBasket.TotalItems ++;
+                userBasket.TotalPrice += book.Price;
                 userBasket.ModifyTime = DateTime.Now;
+
+                _unitOfWork.GetRepository<Basket>().Update(userBasket);
                 await _unitOfWork.SaveChangesAsync();
 
                 response.Success = true;

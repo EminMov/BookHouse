@@ -14,5 +14,6 @@ namespace BookHouseAPI.Application.Abstractions.Services
         public Task<ResponseModel<OrderAddDTO>> CreateOrderAsync(OrderAddDTO orderDTO);
         public Task<ResponseModel<List<OrderGetDTO>>> GetOrdersByUserIdAsync(string userId);
         public Task<ResponseModel<ReturnedBookDTO>> ReturnBookAsync(ReturnBookDTO returnBookDTO);
+        public Task<ResponseModel<List<OrderItemGetDTO>>> GetOrderItemsByOrderId(int id);
     }
 }

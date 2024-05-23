@@ -34,6 +34,14 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("most-popular")]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetMostPopularAuthor()
+        {
+            var result = await _authorService.GetMostPopularAuthorAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorAddDTO authorAddDTO)
@@ -58,12 +66,6 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("most-popular")]
-        [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> GetMostPopularAuthor()
-        {
-            var result = await _authorService.GetMostPopularAuthorAsync();
-            return StatusCode(result.StatusCode, result);
-        }
+        
     }
 }
