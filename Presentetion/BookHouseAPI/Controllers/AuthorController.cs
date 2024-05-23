@@ -1,5 +1,6 @@
 ﻿using BookHouseAPI.Application.Abstractions.Services;
 using BookHouseAPI.Application.DTOs.AuthorDTOs;
+using BookHouseAPI.Persistance.Implementetions.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,14 @@ namespace BookHouseAPI.Controllers
         public async Task<IActionResult> DeleteAuthor([FromRoute] int id) 
         { 
             var result = await _authorService.AuthorDeleteAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("most-popular")]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetMostPopularAuthor()
+        {
+            var result = await _authorService.GetMostPopularAuthorAsync();
             return StatusCode(result.StatusCode, result);
         }
     }

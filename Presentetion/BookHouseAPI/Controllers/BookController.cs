@@ -50,5 +50,13 @@ namespace BookHouseAPI.Controllers
             var result = await _bookService.BookDelete(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("most-sold")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetMostSoldBook()
+        {
+            var result = await _bookService.GetMostSoldBookAsync();
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

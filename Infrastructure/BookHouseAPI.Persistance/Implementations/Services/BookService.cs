@@ -135,5 +135,42 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             }
             return response;
         }
+
+        public async Task<ResponseModel<BookMostSoldDTO>> GetMostSoldBookAsync()
+        {
+            var book = await _unitOfWork.GetRepository<Book>()
+                                    .GetAll()
+                                    .OrderByDescending(b => b.SalesCount)
+                                    .FirstOrDefaultAsync();
+
+            if (book == null)
+            {
+                return new ResponseModel<BookMostSoldDTO>
+                {
+                    Success = false,
+                    Message = "No books found"
+                };
+            }
+
+            var bookDTO = new BookMostSoldDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ISBN = book.ISBN,
+                ReleaseDate = book.ReleaseDate,
+                Description = book.Description,
+                Rating = book.Rating,
+                Price = book.Price,
+                SalesCount = book.SalesCount 
+            };
+
+            return new ResponseModel<BookMostSoldDTO>
+            {
+                Message = "The mos sold book",
+                Success = true,
+                StatusCode = 200,
+                Data = bookDTO
+            };
+        }
     }
 }

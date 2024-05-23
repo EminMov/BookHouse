@@ -194,5 +194,36 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 };
             }
         }
+
+        public async Task<ResponseModel<AuthorGetMostPopDTO>> GetMostPopularAuthorAsync()
+        {
+            var author = await _unitOfWork.GetRepository<Author>()
+                                    .GetAll()
+                                    .OrderByDescending(b => b.SalesCount)
+                                    .FirstOrDefaultAsync();
+
+            if (author == null)
+            {
+                return new ResponseModel<AuthorGetMostPopDTO>
+                {
+                    Success = false,
+                    Message = "No books found"
+                };
+            }
+
+            var authorDTO = new AuthorGetMostPopDTO
+            {
+                FirstName = author.FirstName,
+                SalesCount = author.SalesCount
+            };
+
+            return new ResponseModel<AuthorGetMostPopDTO>
+            {
+                Message = "The most popular author",
+                Success = true,
+                StatusCode = 200,
+                Data = authorDTO
+            };
+        }
     }
 }

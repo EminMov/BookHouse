@@ -10,6 +10,7 @@ namespace BookHouseAPI.Domain.Entities
         public string Description { get; set; }
         public int Rating { get; set; }
         public double Price { get; set; }
+        public int SalesCount { get; set; }
         public int AuthorId { get; set; }
         public int GenreId { get; set; }
         public int ReviewId { get; set; }

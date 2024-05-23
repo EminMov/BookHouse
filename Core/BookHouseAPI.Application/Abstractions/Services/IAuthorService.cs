@@ -15,5 +15,6 @@ namespace BookHouseAPI.Application.Abstractions.Services
         public Task<ResponseModel<AuthorAddDTO>> AuthorAddAsync(AuthorAddDTO authorAdd);
         public Task<ResponseModel<bool>> AuthorUpdateAsync(AuthorUpdateDTO authorUpdate, int Id);
         public Task<ResponseModel<bool>> AuthorDeleteAsync(int Id);
+        public Task<ResponseModel<AuthorGetMostPopDTO>> GetMostPopularAuthorAsync();
     }
 }

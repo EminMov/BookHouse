@@ -39,7 +39,7 @@ namespace BookHouseAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("api/Review/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview([FromQuery] int id)
         {
             var result = await _reviewService.DeleteReviewAsync(id);

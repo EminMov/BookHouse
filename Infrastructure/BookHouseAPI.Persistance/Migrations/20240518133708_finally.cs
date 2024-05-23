@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookHouseAPI.Persistance.Migrations
 {
     /// <inheritdoc />
-    public partial class mig1 : Migration
+    public partial class @finally : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -271,7 +271,8 @@ namespace BookHouseAPI.Persistance.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
-                    BasketId = table.Column<int>(type: "int", nullable: false)
+                    BasketId = table.Column<int>(type: "int", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,6 +288,11 @@ namespace BookHouseAPI.Persistance.Migrations
                         principalTable: "Baskets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -318,24 +324,52 @@ namespace BookHouseAPI.Persistance.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0a6b479c-1d03-4839-ba32-5b4d3a082a79", null, "User", "USER" },
-                    { "59dc5c94-be32-453d-b3e3-2b6f169ff0c5", null, "Admin", "ADMIN" }
+                    { "0254c423-212f-428c-8feb-f0717d9a45fe", null, "Admin", "ADMIN" },
+                    { "09f6e4cb-8e24-4681-93a2-65507cd45b11", null, "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RefreshToken", "RefreshTokenEndTime", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ea28cd8e-878f-469b-bb5e-164ca262e9c3", 0, new DateTime(2024, 5, 10, 17, 53, 52, 60, DateTimeKind.Utc).AddTicks(9634), "9be412cb-8fd2-447f-9d1b-08f3b05b02ea", "admin@example.com", true, "default", "default", true, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEMVqnzW8ZZcvgflwu5K1QRArXssKY+zuOXQLQtiin31XJbWeuFmcpSqG8d06G9yqwQ==", null, false, null, null, "d19b8a09-a2bb-4aad-a4f0-33a29cd25354", false, "Admin" });
+                values: new object[] { "0ae32a15-1ab5-4f79-b37b-7ce84673cf28", 0, new DateTime(2024, 5, 18, 13, 37, 8, 83, DateTimeKind.Utc).AddTicks(5131), "f2d4a5ea-c71e-49ae-afbe-94e940ebc3e1", "admin@example.com", true, "default", "default", true, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEHpcqQuh2df27NVW+SRkdUxGQziDE2Fwf5j7SgXFSQ27B6sVp7V3B/5rhC5yp/hcrA==", null, false, null, null, "548ebfde-d6c1-4e6b-9307-8501acf3343b", false, "Admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId", "Discriminator" },
-                values: new object[] { "59dc5c94-be32-453d-b3e3-2b6f169ff0c5", "ea28cd8e-878f-469b-bb5e-164ca262e9c3", "AppUserRoles" });
+                values: new object[] { "0254c423-212f-428c-8feb-f0717d9a45fe", "0ae32a15-1ab5-4f79-b37b-7ce84673cf28", "AppUserRoles" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -402,9 +436,24 @@ namespace BookHouseAPI.Persistance.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_BookId",
+                table: "OrderItems",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_BasketId",
                 table: "Orders",
                 column: "BasketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_BookId",
+                table: "Orders",
+                column: "BookId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
@@ -441,13 +490,16 @@ namespace BookHouseAPI.Persistance.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Books");

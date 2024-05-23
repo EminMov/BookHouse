@@ -53,43 +53,45 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 order.Basket = userBasket;
                 order.BasketId = userBasket.Id;
 
-                //foreach(var item in userBasket.Items)
-                //{
-                //    OrderItem orderItem = new OrderItem();
-                //    orderItem.Price = item.Price;
-                //    orderItem.Title = item.Title;
-                //    orderItem.OrderId = order.Id;
-                //    await _unitOfWork.GetRepository<OrderItem>().AddAsync(orderItem);
-                //}
-
-                
-                // Очищаем корзину после создания заказа
-                //userBasket.Items.Clear();
-                //userBasket.TotalItems = 0;
-                //userBasket.TotalPrice = 0;
-                //userBasket.ModifyTime = DateTime.Now;
-                //userBasket.Order = order;
-                //userBasket.Order.Id = order.Id;
-
                 var addedOrder = await _unitOfWork.GetRepository<Order>().AddAsync(order);
+                
                 await _unitOfWork.SaveChangesAsync();
-                //var newOrder = _unitOfWork.GetRepository<Order>().GetAll().FirstOrDefaultAsync();
+
                 foreach (var item in userBasket.Items)
                 {
                     OrderItem orderItem = new OrderItem();
                     orderItem.Price = item.Price;
                     orderItem.Title = item.Title;
                     orderItem.OrderId = order.Id;
+                    orderItem.BookId = item.Id;
                     await _unitOfWork.GetRepository<OrderItem>().AddAsync(orderItem);
                 }
                 await _unitOfWork.SaveChangesAsync();
+
+                foreach (var item in order.OrderItems)
+                {
+                    var book = await _unitOfWork.GetRepository<Book>().GetByIdAsync(item.BookId);
+                    if (book != null)
+                    {
+                        book.SalesCount++;
+                        _unitOfWork.GetRepository<Book>().Update(book);
+
+                        var authorId = book.AuthorId;
+                        var author = await _unitOfWork.GetRepository<Author>().GetByIdAsync(authorId);
+
+                        author.SalesCount++;
+                        _unitOfWork.GetRepository<Author>().Update(author);
+                    }
+                }
+                await _unitOfWork.SaveChangesAsync();
+
+
                 //Очищаем корзину после создания заказа
+                userBasket.UserId = null;
                 userBasket.Items.Clear();
                 userBasket.TotalItems = 0;
                 userBasket.TotalPrice = 0;
                 userBasket.ModifyTime = DateTime.Now;
-                //userBasket.Order = order;
-                //userBasket.Order.Id = order.Id;
 
                 await _unitOfWork.SaveChangesAsync();
 
@@ -118,7 +120,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 var orders = await _unitOfWork.GetRepository<Order>()
                                               .GetAll()
                                               .Include(x => x.User)
-                                              .Include(x => x.Basket)
+                                              .Include(x => x.OrderItems)
                                               .Where(o => o.User.Id == userId)
                                               .ToListAsync();
 
@@ -153,7 +155,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
             {
                 var order = await _unitOfWork.GetRepository<Order>().GetByIdAsync(returnBookDTO.OrderId);
 
-                if (order == null || order.User.Id != returnBookDTO.UserId)
+                if (order == null || order.UserId != returnBookDTO.UserId)
                 {
                     response.Success = false;
                     response.StatusCode = 404;
@@ -161,7 +163,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     return response;
                 }
 
-                var bookToRemove = order.Basket.Items.FirstOrDefault(b => b.Id == returnBookDTO.BookId);
+                var bookToRemove = order.OrderItems.FirstOrDefault(b => b.Id == returnBookDTO.BookId);
 
                 if (bookToRemove == null)
                 {
@@ -171,7 +173,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                     return response;
                 }
 
-                order.Basket.Items.Remove(bookToRemove);
+                order.OrderItems.Remove(bookToRemove);
                 await _unitOfWork.SaveChangesAsync();
 
                 var returnedBookDTO = new ReturnedBookDTO

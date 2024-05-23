@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookHouseAPI.Persistance.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20240510175352_mig1")]
-    partial class mig1
+    [Migration("20240518142816_BookMostSold")]
+    partial class BookMostSold
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,10 +107,10 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ea28cd8e-878f-469b-bb5e-164ca262e9c3",
+                            Id = "cdcaa2e7-cb28-44e6-87d3-8cfff598c511",
                             AccessFailedCount = 0,
-                            BirthDate = new DateTime(2024, 5, 10, 17, 53, 52, 60, DateTimeKind.Utc).AddTicks(9634),
-                            ConcurrencyStamp = "9be412cb-8fd2-447f-9d1b-08f3b05b02ea",
+                            BirthDate = new DateTime(2024, 5, 18, 14, 28, 16, 143, DateTimeKind.Utc).AddTicks(1472),
+                            ConcurrencyStamp = "2969da0a-a0a3-4409-9f69-da8525da01d5",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FirstName = "default",
@@ -118,9 +118,9 @@ namespace BookHouseAPI.Persistance.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMVqnzW8ZZcvgflwu5K1QRArXssKY+zuOXQLQtiin31XJbWeuFmcpSqG8d06G9yqwQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHBC9Guo9x16qcyExzOyYVDePyhKlbXzqmvdgEcB3n4bu5IkmRgkST92hC4HKuI7xw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d19b8a09-a2bb-4aad-a4f0-33a29cd25354",
+                            SecurityStamp = "bf4f8757-cb8d-4668-9a50-78ac12f603d9",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -155,13 +155,13 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "59dc5c94-be32-453d-b3e3-2b6f169ff0c5",
+                            Id = "86e83b96-9711-488f-bca2-fde6f957304a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "0a6b479c-1d03-4839-ba32-5b4d3a082a79",
+                            Id = "444bb087-8fae-435c-a1ca-51c50aabc2c3",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -263,6 +263,9 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Property<int>("ReviewId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SalesCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -309,6 +312,9 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Property<int>("BasketId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("BookId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -322,9 +328,40 @@ namespace BookHouseAPI.Persistance.Migrations
 
                     b.HasIndex("BasketId");
 
+                    b.HasIndex("BookId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Review", b =>
@@ -486,8 +523,8 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "ea28cd8e-878f-469b-bb5e-164ca262e9c3",
-                            RoleId = "59dc5c94-be32-453d-b3e3-2b6f169ff0c5"
+                            UserId = "cdcaa2e7-cb28-44e6-87d3-8cfff598c511",
+                            RoleId = "86e83b96-9711-488f-bca2-fde6f957304a"
                         });
                 });
 
@@ -535,6 +572,10 @@ namespace BookHouseAPI.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BookHouseAPI.Domain.Entities.Book", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("BookId");
+
                     b.HasOne("BookHouseAPI.Domain.Entities.AppUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId");
@@ -542,6 +583,25 @@ namespace BookHouseAPI.Persistance.Migrations
                     b.Navigation("Basket");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.OrderItem", b =>
+                {
+                    b.HasOne("BookHouseAPI.Domain.Entities.Book", "Book")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookHouseAPI.Domain.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Review", b =>
@@ -631,12 +691,21 @@ namespace BookHouseAPI.Persistance.Migrations
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Book", b =>
                 {
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("Orders");
+
                     b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("BookHouseAPI.Domain.Entities.Genre", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("BookHouseAPI.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -84,7 +84,7 @@ namespace BookHouseAPI.Persistance.Implementetions.Services
                 var userBasket = await _unitOfWork.GetRepository<Basket>()
                                                   .GetAll()
                                                   .Include(b => b.Items)
-                                                  //.Include(b => b.Order)
+                                                  //.OrderByDescending<Basket, >(Basket)
                                                   .FirstOrDefaultAsync(b => b.User.Id == userId);
 
                 if (userBasket == null)

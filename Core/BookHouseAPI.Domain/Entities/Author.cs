@@ -9,6 +9,7 @@ namespace BookHouseAPI.Domain.Entities
         public string Country { get; set; }
         public string? Biography { get; set; } 
         public int BooksCount { get; set; }
+        public int SalesCount { get; set; }
         public ICollection<Book> Books { get; set; }
     }
 }
